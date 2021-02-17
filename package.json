@@ -12,8 +12,10 @@
     "@babel/core": "^7.12.16",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.16",
+    "chai": "^4.3.0",
     "deepmerge": "^4.2.2",
     "generate-source-map": "0.0.5",
+    "mocha": "^8.3.0",
     "rollup": "^1.27.8",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -25,8 +27,7 @@
     "build": "rollup -c",
     "build-production": "NODE_ENV=production && rollup -c --environment NODE_ENV:production",
     "build-production-windows": "set NODE_ENV=production && rollup -c --environment NODE_ENV:production",
-    "pretest": "build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha \"tests/allTests/**/*.js\""
   },
   "repository": {
     "type": "git",

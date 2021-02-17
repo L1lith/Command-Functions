@@ -1,9 +1,9 @@
-const { CommandFunctions } = require('./dist/Shinput-commonjs')
+const { CommandFunctions } = require('../dist/Shinput-commonjs')
 const commands = require('./commands')
 
 const app = new CommandFunctions(commands, {
   exports: {
-    age: 12
+    testProp: 26
   }
 })
 
