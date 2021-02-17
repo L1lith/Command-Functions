@@ -8,7 +8,7 @@ const app = new CommandFunctions(commands, {
 })
 
 async function run() {
-  console.log(await app.runCLI())
+  await app.runCLI()
 }
 
 if (require.main === module) {
