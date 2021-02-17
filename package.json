@@ -1,16 +1,19 @@
 {
-  "name": "shinput", 
+  "name": "shinput",
   "version": "0.0.1",
   "description": "Parse and validate arguments or other inputs. Uses Sandhands for validation",
   "main": "index.js",
   "dependencies": {
+    "micro-fs": "^1.0.3",
     "minimist": "^1.2.5",
     "sandhands": "^1.8.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
+    "@babel/core": "^7.12.16",
+    "@babel/plugin-transform-runtime": "^7.12.15",
+    "@babel/preset-env": "^7.12.16",
     "deepmerge": "^4.2.2",
+    "generate-source-map": "0.0.5",
     "rollup": "^1.27.8",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
