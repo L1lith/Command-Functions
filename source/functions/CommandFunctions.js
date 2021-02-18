@@ -2,6 +2,7 @@ import parseCommand from './parseCommand'
 import getExports from './getExports'
 import readCLI from './readCLI'
 import stripProperties from './stripProperties'
+import { sanitize } from 'sandhands'
 
 class CommandFunctions {
   constructor(commandFunctions, options = {}) {
@@ -36,14 +37,17 @@ class CommandFunctions {
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
     const exports = this.getExports()
-    const { commandName, options } = cliArgs
+    const { commandName, options, primaryArgs = [], format } = cliArgs
     if (!exports.hasOwnProperty(commandName))
       throw new Error('Missing the export for the command ' + commandName)
+    if (cliArgs.hasOwnProperty('format')) {
+      sanitize({ ...options, _: primaryArgs }, format)
+    }
     let output
     if (typeof options == 'object' && options !== null) {
-      output = await exports[commandName](...cliArgs.primaryArgs, options)
+      output = await exports[commandName](...primaryArgs, options)
     } else {
-      output = await exports[commandName](...cliArgs.primaryArgs)
+      output = await exports[commandName](...primaryArgs)
     }
     return output
   }
@@ -62,8 +66,10 @@ class CommandFunctions {
             process.exit(1)
           }
         })
+      return null
+    } else {
+      return this.getExports()
     }
-    return this.getExports()
   }
 }
 
