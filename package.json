@@ -27,7 +27,9 @@
     "build": "rollup -c",
     "build-production": "NODE_ENV=production && rollup -c --environment NODE_ENV:production",
     "build-production-windows": "set NODE_ENV=production && rollup -c --environment NODE_ENV:production",
-    "test": "mocha \"tests/allTests/**/*.js\""
+    "test": "mocha \"tests/allTests/**/*.js\"",
+    "prepublishOnly": "npm run test && npm run build-production",
+    "publish-alias": "npm publish"
   },
   "repository": {
     "type": "git",
