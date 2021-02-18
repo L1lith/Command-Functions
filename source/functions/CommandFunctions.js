@@ -22,6 +22,7 @@ class CommandFunctions {
     this.commandsOptions = stripProperties(this.options, ['defaultCommand'], true)
     this.getExports = this.getExports.bind(this)
     this.runCLI = this.runCLI.bind(this)
+    this.autoRun = this.autoRun.bind(this)
     this.exports = null
   }
   getExports() {
@@ -34,7 +35,7 @@ class CommandFunctions {
   }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
-    const exports = await this.getExports()
+    const exports = this.getExports()
     const { commandName, options } = cliArgs
     if (!exports.hasOwnProperty(commandName))
       throw new Error('Missing the export for the command ' + commandName)
@@ -45,6 +46,24 @@ class CommandFunctions {
       output = await exports[commandName](...cliArgs.primaryArgs)
     }
     return output
+  }
+  autoRun(doExit = true) {
+    const isParentShell = require.main === module.parent
+    if (isParentShell) {
+      this.runCLI()
+        .then(() => {
+          if (doExit === true) {
+            process.exit(0)
+          }
+        })
+        .catch(error => {
+          console.error(error)
+          if (doExit === true) {
+            process.exit(1)
+          }
+        })
+    }
+    return this.getExports()
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "cli-functions",
+  "name": "command-functions",
   "version": "0.0.1",
   "description": "Create a CLI tool and a NPM library at the same time using functions",
   "main": "index.js",
