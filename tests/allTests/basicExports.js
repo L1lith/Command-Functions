@@ -4,7 +4,7 @@ const library = require('../library')
 const { details } = require('sandhands')
 const { inspect } = require('util')
 
-const exportsFormat = { version: Function, testProp: Number }
+const exportsFormat = { version: Number, testProp: Number }
 
 describe('the library has the correct exports', () => {
   it('loads the correct exports', async () => {

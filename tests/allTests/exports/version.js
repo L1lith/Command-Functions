@@ -5,13 +5,10 @@ const { details } = require('sandhands')
 const { inspect } = require('util')
 const { version } = require('../../../package.json')
 
-const versionExportFormat = { _: { version: Function }, strict: false }
+const versionExportFormat = { _: { version: { _: Number, equalTo: version } }, strict: false }
 
 describe('the version command is exported correctly', () => {
-  it('loads the version export', async () => {
+  it('loads the version export and has the correct value', async () => {
     expect(inspect(details(library, versionExportFormat))).to.equal('null')
-  })
-  it('the version function returns the correct value', async () => {
-    expect(library.version()).to.equal(version)
   })
 })

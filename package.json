@@ -35,7 +35,14 @@
     "type": "git",
     "url": "git+https://github.com/L1lith/Liliths-Templates.git"
   },
-  "keywords": ["cli", "shell", "exports", "library", "terminal", "function"],
+  "keywords": [
+    "cli",
+    "shell",
+    "exports",
+    "library",
+    "terminal",
+    "function"
+  ],
   "author": "L1lith",
   "license": "MIT"
 }

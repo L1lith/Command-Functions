@@ -1,3 +1,3 @@
-const version = require('./version')
+//const version = require('./version')
 
-module.exports = { version }
+module.exports = {}
