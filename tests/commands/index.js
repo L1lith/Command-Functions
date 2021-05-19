@@ -1,3 +1,4 @@
 //const version = require('./version')
+const toUpperCase = require('./toUpperCase')
 
-module.exports = {}
+module.exports = { toUpperCase }

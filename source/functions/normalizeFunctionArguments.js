@@ -9,12 +9,12 @@ const optionsFormat = {
   allOptional: true
 }
 
-function normalizeFunctionArguments(args = [], options = {}) {
+function normalizeFunctionArguments(args = [], commandOptions = {}) {
   if (!Array.isArray(args)) throw new Error('Please supply an argument array')
-  const { commandName, parseOptions = true } = options
+  const { name, parseOptions = true } = commandOptions
   let object = {}
   const parserOptions = {}
-  if (typeof commandName == 'string') parserOptions.commandName = commandName
+  if (typeof name == 'string') parserOptions.name = name
   const lastArg = args[args.length - 1]
   if (parseOptions === true && lastArg !== null && typeof lastArg == 'object') {
     object = lastArg

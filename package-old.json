@@ -1,0 +1,48 @@
+{
+  "name": "command-functions",
+  "version": "0.0.1",
+  "description": "Create a CLI tool and a NPM library at the same time using functions",
+  "main": "index.js",
+  "dependencies": {
+    "micro-fs": "^1.0.3",
+    "minimist": "^1.2.5",
+    "sandhands": "^1.8.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/plugin-transform-runtime": "^7.12.15",
+    "@babel/preset-env": "^7.12.16",
+    "chai": "^4.3.0",
+    "deepmerge": "^4.2.2",
+    "generate-source-map": "0.0.5",
+    "mocha": "^8.3.0",
+    "rollup": "^1.27.8",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-require-context": "^1.0.0",
+    "rollup-plugin-uglify": "^6.0.3"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "build-production": "NODE_ENV=production && rollup -c --environment NODE_ENV:production",
+    "build-production-windows": "set NODE_ENV=production && rollup -c --environment NODE_ENV:production",
+    "test": "mocha \"tests/allTests/**/*.js\"",
+    "prepublishOnly": "npm run test && npm run build-production",
+    "publish-alias": "npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/L1lith/Liliths-Templates.git"
+  },
+  "keywords": [
+    "cli",
+    "shell",
+    "exports",
+    "library",
+    "terminal",
+    "function"
+  ],
+  "author": "L1lith",
+  "license": "MIT"
+}

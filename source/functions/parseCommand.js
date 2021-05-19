@@ -59,9 +59,9 @@ function parseCommandOptions(input, parserOptions = {}) {
     }
     defaultCommand = name
   }
-  if (options.hasOwnProperty('inputs'))
-    options.inputs = options.inputs.map(input => (input === null ? {} : input)) // Replace the null input options with blank objects
-  return { options, handler, name }
+  // if (options.hasOwnProperty('inputs'))
+  //   options.inputs = options.inputs.map(input => (input === null ? {} : input)) // Replace the null input options with blank objects
+  return { ...options, handler, name }
 }
 
 export default parseCommandOptions

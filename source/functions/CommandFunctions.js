@@ -5,7 +5,7 @@ import stripProperties from './stripProperties'
 import { sanitize } from 'sandhands'
 
 class CommandFunctions {
-  constructor(commandFunctions, options = {}) {
+  constructor(commandFunctions = null, options = {}) {
     const commandsConfig = (this.commandsConfig = {})
     const commandMap = {}
     let defaultCommand = null
@@ -21,28 +21,28 @@ class CommandFunctions {
     commandsConfig.defaultCommand = defaultCommand
     this.options = options
     this.commandsOptions = stripProperties(this.options, ['defaultCommand'], true)
-    this.getExports = this.getExports.bind(this)
+    //this.getExports = this.getExports.bind(this)
     this.runCLI = this.runCLI.bind(this)
     this.autoRun = this.autoRun.bind(this)
-    this.exports = null
+    this._exports = null
   }
-  getExports() {
-    if (this.exports !== null) return this.exports
+  get exports() {
+    if (this._exports !== null) return this._exports
     let newExports = getExports(this.commandsConfig, this.commandsOptions)
     if (typeof this.options.exports == 'object' && this.options.exports !== null) {
       newExports = { ...this.options.exports, ...newExports }
     }
-    return (this.exports = newExports)
+    return (this._exports = newExports)
   }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
-    const exports = this.getExports()
+    const exports = this.exports
     const { commandName, options, primaryArgs = [], format } = cliArgs
     if (!exports.hasOwnProperty(commandName))
       throw new Error('Missing the export for the command ' + commandName)
-    if (cliArgs.hasOwnProperty('format')) {
-      sanitize({ ...options, _: primaryArgs }, format)
-    }
+    // if (cliArgs.hasOwnProperty('format')) {
+    //   sanitize({ ...options, _: primaryArgs }, format)
+    // }
     let output
     if (typeof options == 'object' && options !== null) {
       output = await exports[commandName](...primaryArgs, options)
@@ -68,7 +68,7 @@ class CommandFunctions {
         })
       return null
     } else {
-      return this.getExports()
+      return this.exports
     }
   }
 }
