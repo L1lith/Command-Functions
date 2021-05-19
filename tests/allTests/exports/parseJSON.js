@@ -1,5 +1,5 @@
 const chai = require('chai')
-const { assert, expect } = chai
+const { expect } = chai
 const library = require('../../library')
 
 describe('the parseJSON command operates correctly', () => {
@@ -17,6 +17,14 @@ describe('the parseJSON command operates correctly', () => {
   it('Fails to re-encode invalid JSON values', () => {
     expect(() => {
       parseJSON(NaN)
+    }).to.throw()
+  })
+  it('Receives the surpriseThrow option successfully', () => {
+    expect(() => {
+      parseJSON(12)
+    }).to.not.throw()
+    expect(() => {
+      parseJSON(12, { surpriseThrow: true })
     }).to.throw()
   })
 })

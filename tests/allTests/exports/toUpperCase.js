@@ -1,5 +1,5 @@
 const chai = require('chai')
-const { assert, expect } = chai
+const { expect } = chai
 const library = require('../../library')
 
 describe('the toUpperCase command operates correctly', () => {
