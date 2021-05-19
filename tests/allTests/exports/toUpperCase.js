@@ -1,16 +1,6 @@
 const chai = require('chai')
 const { assert, expect } = chai
 const library = require('../../library')
-// const { details } = require('sandhands')
-// const { inspect } = require('util')
-// const { version } = require('../../../package.json')
-
-const versionExportFormat = {
-  _: {
-    version: { _: String, regex: /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/ /* Semver Regex */ }
-  },
-  strict: false
-}
 
 describe('the toUpperCase command operates correctly', () => {
   const { toUpperCase } = library

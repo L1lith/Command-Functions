@@ -20,7 +20,7 @@ function getExports(config = null) {
           if (input.hasOwnProperty('normalize')) value = input.normalize(value)
           if (input.hasOwnProperty('format')) sanitize(value, input.format)
           if (inputName === '_') {
-            primaryArgs = value
+            primaryArgs = Array.isArray(value) ? value : [value]
           } else {
             options[inputName] = value
           }

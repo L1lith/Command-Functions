@@ -4,7 +4,12 @@ const library = require('../library')
 const { details } = require('sandhands')
 const { inspect } = require('util')
 
-const exportsFormat = { version: String, testProp: Number, toUpperCase: Function }
+const exportsFormat = {
+  version: String,
+  testProp: Number,
+  toUpperCase: Function,
+  parseJSON: Function
+}
 
 describe('the library has the correct exports', () => {
   it('loads the correct exports', async () => {
