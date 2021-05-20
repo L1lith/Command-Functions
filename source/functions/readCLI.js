@@ -25,15 +25,18 @@ function readCLI(config, options, minimistOptions = null) {
     // Executed VIA Node, trim out file path from argsObject
     args._ = args._.slice(1)
   }
-  const searchName = args._[0].toLowerCase().replace(spacingRegex, '')
+  const searchName =
+    typeof args._[0] != 'string' ? null : args._[0].toLowerCase().replace(spacingRegex, '')
   let commandName = defaultCommand || null
-  if (searchName.length > 0) {
+  if (searchName !== null && searchName.length > 0) {
     const matchCommand =
       Object.keys(commandMap).find(
         value => value.toLowerCase().replace(spacingRegex, '') === searchName
       ) || null
-    if (matchCommand !== null) commandName = matchCommand
-    args._ = args._.slice(1)
+    if (matchCommand !== null) {
+      commandName = matchCommand
+      args._ = args._.slice(1)
+    }
   }
 
   if (
