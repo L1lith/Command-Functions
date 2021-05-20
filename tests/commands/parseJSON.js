@@ -6,5 +6,6 @@ function parseJSON(str, options = {}) {
 
 module.exports = {
   inputs: { _: { normalize: inputs => String(inputs[0]) }, surpriseThrow: { format: Boolean } },
-  handler: parseJSON
+  handler: parseJSON,
+  default: true
 }

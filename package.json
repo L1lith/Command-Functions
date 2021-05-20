@@ -30,6 +30,7 @@
   "author": "LILITH",
   "license": "MIT",
   "dependencies": {
+    "@jsdevtools/chai-exec": "^2.1.1",
     "micro-fs": "^1.0.3",
     "minimist": "^1.2.5",
     "sandhands": "^1.8.9"

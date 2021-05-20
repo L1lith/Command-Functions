@@ -3,6 +3,7 @@ import getExports from './getExports'
 import readCLI from './readCLI'
 import stripProperties from './stripProperties'
 import { sanitize } from 'sandhands'
+import { inspect } from 'util'
 
 class CommandFunctions {
   constructor(commandFunctions = null, options = {}) {
@@ -12,15 +13,15 @@ class CommandFunctions {
     Object.entries(commandFunctions).forEach(([commandName, commandConfig]) => {
       const commandOptions = parseCommand(commandConfig, { defaultName: commandName })
       commandMap[commandOptions.name] = commandOptions
-      if (commandOptions.defaultCommand === true) {
+      if (commandOptions.default === true) {
         if (defaultCommand !== null) throw new Error('Found multiple default commands')
         defaultCommand = commandOptions.name
       }
     })
     commandsConfig.commandMap = commandMap
-    commandsConfig.defaultCommand = defaultCommand
+    commandsConfig.defaultCommand = defaultCommand || null
     this.options = options
-    this.commandsOptions = stripProperties(this.options, ['defaultCommand'], true)
+    this.commandsOptions = stripProperties(this.options, ['default'], true)
     //this.getExports = this.getExports.bind(this)
     this.runCLI = this.runCLI.bind(this)
     this.autoRun = this.autoRun.bind(this)
@@ -37,17 +38,16 @@ class CommandFunctions {
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
     const exports = this.exports
-    const { commandName, options, primaryArgs = [], format } = cliArgs
-    if (!exports.hasOwnProperty(commandName))
-      throw new Error('Missing the export for the command ' + commandName)
+    const { name, options, primaryArgs = [], format } = cliArgs
+    if (!exports.hasOwnProperty(name)) throw new Error('Missing the export for the command ' + name)
     // if (cliArgs.hasOwnProperty('format')) {
     //   sanitize({ ...options, _: primaryArgs }, format)
     // }
     let output
     if (typeof options == 'object' && options !== null) {
-      output = await exports[commandName](...primaryArgs, options)
+      output = await exports[name](...primaryArgs, options)
     } else {
-      output = await exports[commandName](...primaryArgs)
+      output = await exports[name](...primaryArgs)
     }
     return output
   }
@@ -55,7 +55,8 @@ class CommandFunctions {
     const isParentShell = require.main === module.parent
     if (isParentShell) {
       this.runCLI()
-        .then(() => {
+        .then(output => {
+          if (output !== undefined) console.log(inspect(output))
           if (doExit === true) {
             process.exit(0)
           }

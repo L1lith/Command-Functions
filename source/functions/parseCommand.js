@@ -20,7 +20,7 @@ const commandOptionsFormat = {
       },
       nullable: true
     },
-    defaultCommand: Boolean
+    default: Boolean
   },
   allOptional: true
 }

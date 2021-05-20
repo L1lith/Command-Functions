@@ -1,12 +1,14 @@
-function parseoptions(argsObject, parserOptions = {}) {
+function parseOptions(argsObject, parserOptions = {}) {
   //if (!Array.isArray(args)) throw new Error('Please supply an argument array')
   let options = { ...argsObject }
-  const { name = null } = parserOptions
+  const { commandName = null } = parserOptions
   let { primaryArgs = [] } = parserOptions
   if (
     (primaryArgs.length > 0) +
       (Array.isArray(options._) && options._.length > 0) +
-      (typeof name == 'string' && Array.isArray(options[name]) && options[name].length) >
+      (typeof commandName == 'string' &&
+        Array.isArray(options[commandName]) &&
+        options[commandName].length) >
     1
   )
     throw new Error(
@@ -17,15 +19,15 @@ function parseoptions(argsObject, parserOptions = {}) {
       ? primaryArgs
       : options?._?.length > 0
       ? options._
-      : typeof name == 'string' && options[name]?.length > 0
-      ? options[name]
+      : typeof commandName == 'string' && options[commandName]?.length > 0
+      ? options[commandName]
       : []
-  delete options[name]
+  delete options[commandName]
   delete options._
   if (primaryArgs.length > 0) {
   }
   //console.log({ options, primaryArgs, name })
-  return { options, primaryArgs, name }
+  return { options, primaryArgs, name: commandName }
 }
 
-export default parseoptions
+export default parseOptions
