@@ -29,4 +29,11 @@ describe('parseJSON CLI usage', () => {
     expect(myCLI).stdout.to.contain("{ car: 'ford' }")
     expect(myCLI).stderr.to.be.empty
   })
+  it('should throw given invalid input', () => {
+    let myCLI = chaiExec('node ../../library NaN')
+
+    // Should syntax
+    expect(myCLI).to.exit.with.code(1)
+    expect(myCLI).stderr.to.not.be.empty
+  })
 })

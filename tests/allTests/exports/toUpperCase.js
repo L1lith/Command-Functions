@@ -2,7 +2,7 @@ const chai = require('chai')
 const { expect } = chai
 const library = require('../../library')
 
-describe('the toUpperCase command operates correctly', () => {
+describe('the toUpperCase export operates correctly', () => {
   const { toUpperCase } = library
   it('Accepts valid inputs', () => {
     expect(toUpperCase('banana boat')).to.equal('BANANA BOAT')

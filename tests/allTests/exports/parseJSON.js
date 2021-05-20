@@ -2,7 +2,7 @@ const chai = require('chai')
 const { expect } = chai
 const library = require('../../library')
 
-describe('the parseJSON command operates correctly', () => {
+describe('the parseJSON export operates correctly', () => {
   const { parseJSON } = library
   it('Parses valid JSON correctly', () => {
     const dataStructure = { a: 2, gh: '0z' }

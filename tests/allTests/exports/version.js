@@ -1,5 +1,5 @@
 const chai = require('chai')
-const { assert, expect } = chai
+const { expect } = chai
 const library = require('../../library')
 const { details } = require('sandhands')
 const { inspect } = require('util')
@@ -12,7 +12,7 @@ const versionExportFormat = {
   strict: false
 }
 
-describe('the version command is exported correctly', () => {
+describe('the version is exported correctly', () => {
   it('loads the version export and has the correct value', async () => {
     expect(inspect(details(library, versionExportFormat))).to.equal('null')
   })
