@@ -1,11 +1,11 @@
 const { CommandFunctions } = require('../dist/Shinput-commonjs')
 const commands = require('./commands')
-const { version } = require('../../package.json')
+const { version } = require('../package.json')
 
 const app = new CommandFunctions(commands, {
   exports: {
-    version,
-    testProp: 26
+    testProp: 26,
+    version
   }
 })
 

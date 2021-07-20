@@ -17,7 +17,7 @@ class CommandFunctions {
         defaultCommand = commandOptions.name
       }
     })
-    commandsConfig.commandMap = commandMap
+    commandsConfig.commands = commandMap
     commandsConfig.defaultCommand = defaultCommand
     this.options = options
     this.commandsOptions = stripProperties(this.options, ['defaultCommand'], true)

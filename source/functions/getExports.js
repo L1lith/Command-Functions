@@ -1,16 +1,23 @@
 import loadCommandsFolder from './loadCommandsFolder'
 import normalizeFunctionArguments from './normalizeFunctionArguments'
 
+const configFormat = {
+  _: {
+    commands: { _: Object, strict: false }
+  },
+  allOptional: true
+}
+
 function getExports(config = null) {
-  const { commandMap } = config
+  const { commands, commandDir } = config
   const exports = {}
-  Object.values(commandMap).forEach(command => {
+  Object.values(commands).forEach(command => {
     exports[command.name] = function (...args) {
       const { options, primaryArgs } = normalizeFunctionArguments(args, {
         commandName: command.name
       })
 
-      return command.handler(...primaryArgs, options)
+      return command.handler(primaryArgs, options)
     }
   })
   return exports
