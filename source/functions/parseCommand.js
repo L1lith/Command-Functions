@@ -1,6 +1,7 @@
 import { sanitize, Format, ANY } from 'sandhands'
 
 const trimmedString = { _: String, trimmed: true }
+const normalInt = { _: Number, min: 0, finite: true, integer: true }
 
 const nameFormat = Format(String).regex(/^[a-z0-9]+$/i)
 
@@ -13,7 +14,15 @@ const commandOptionsFormat = {
           format: ANY,
           normalize: Function,
           question: trimmedString,
-          default: ANY
+          default: ANY,
+          args: {
+            // THe number of arguments can also be specified or be given as a range
+            _: normalInt,
+            _or: {
+              _: [normalInt, normalInt],
+              validate: ([num1, num2]) => (num1 < num2 ? true : 'The first number must be smaller')
+            }
+          }
         },
         allOptional: true,
         nullable: true
@@ -50,6 +59,7 @@ function parseCommandOptions(input, parserOptions = {}) {
   //options = { ...defaultOptions, ...options }
   delete options.name
   sanitize(name, nameFormat)
+  console.log('x', options)
   sanitize(options, commandOptionsFormat)
   if (options.defaultCommand === true) {
     if (defaultCommand !== null) {

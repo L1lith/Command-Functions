@@ -3,6 +3,9 @@ import getExports from './getExports'
 import readCLI from './readCLI'
 import stripProperties from './stripProperties'
 import { sanitize } from 'sandhands'
+import { inspect } from 'util'
+
+const stripFluffRegex = /[\-\.\s]+/gi
 
 class CommandFunctions {
   constructor(commandFunctions, options = {}) {
@@ -24,31 +27,29 @@ class CommandFunctions {
     this.getExports = this.getExports.bind(this)
     this.runCLI = this.runCLI.bind(this)
     this.autoRun = this.autoRun.bind(this)
-    this.exports = null
+    this.exportsObject = null
   }
   getExports() {
-    if (this.exports !== null) return this.exports
+    if (this.exportsObject !== null) return this.exportsObject
     let newExports = getExports(this.commandsConfig, this.commandsOptions)
     if (typeof this.options.exports == 'object' && this.options.exports !== null) {
       newExports = { ...this.options.exports, ...newExports }
     }
-    return (this.exports = newExports)
+    return (this.exportsObject = newExports)
   }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
-    const exports = this.getExports()
     const { commandName, options, primaryArgs = [], format } = cliArgs
-    if (!exports.hasOwnProperty(commandName))
-      throw new Error('Missing the export for the command ' + commandName)
     if (cliArgs.hasOwnProperty('format')) {
       sanitize({ ...options, _: primaryArgs }, format)
     }
-    let output
-    if (typeof options == 'object' && options !== null) {
-      output = await exports[commandName](...primaryArgs, options)
-    } else {
-      output = await exports[commandName](...primaryArgs)
+
+    let output = this.getExport(commandName)
+    if (typeof output == 'function') {
+      output = output(...primaryArgs, options)
     }
+    output = await output
+    console.log(inspect(output))
     return output
   }
   autoRun(doExit = true) {
@@ -70,6 +71,16 @@ class CommandFunctions {
     } else {
       return this.getExports()
     }
+  }
+  getExport(name, exportsObject = null) {
+    if (typeof name != 'string') throw new Error('Invalid Command Name')
+    if (exportsObject === null) exportsObject = this.getExports()
+    const searchName = name.replace(stripFluffRegex, '').toLowerCase()
+    const match = Object.keys(exportsObject).find(
+      key => key.replace(stripFluffRegex, '').toLowerCase() === searchName
+    )
+    if (!match) throw new Error(`Missing the command "${name}", try the help command`)
+    return exportsObject[match]
   }
 }
 

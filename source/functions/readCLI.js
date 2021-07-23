@@ -2,7 +2,7 @@ import minimist from 'minimist'
 import parseArgsObject from './parseArgsObject'
 
 function readCLI(config, options, minimistOptions = null) {
-  const { commandMap } = config
+  const { commandMap = {} } = config
   const { defaultCommand } = options
   let rawArgs
   if (Array.isArray(minimistOptions) && minimistOptions.length > 0) {
@@ -31,8 +31,8 @@ function readCLI(config, options, minimistOptions = null) {
 
   const parsedArgs = parseArgsObject(args, { commandName })
   if (typeof parsedArgs.commandName != 'string') throw new Error('No Command Requested')
-  if (!commandMap.hasOwnProperty(parsedArgs.commandName))
-    throw new Error(`Invalid command ${commandName} requested`)
+  //if (!commandMap.hasOwnProperty(parsedArgs.commandName))
+  //throw new Error(`Invalid command ${commandName} requested`)
   return parsedArgs
 }
 
