@@ -24,6 +24,7 @@
     "rollup-plugin-uglify": "^6.0.3"
   },
   "scripts": {
+    "dev": "rollup -w -c",
     "build": "rollup -c",
     "build-production": "NODE_ENV=production && rollup -c --environment NODE_ENV:production",
     "build-production-windows": "set NODE_ENV=production && rollup -c --environment NODE_ENV:production",

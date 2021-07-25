@@ -5,9 +5,25 @@ const normalInt = { _: Number, min: 0, finite: true, integer: true }
 
 const nameFormat = Format(String).regex(/^[a-z0-9]+$/i)
 
+// const commandConfigFormat = {
+//   _: {
+//     handler: Function,
+//     args: {
+//       // THe number of arguments can also be specified or be given as a range
+//       _: normalInt,
+//       _or: {
+//         _: [normalInt, normalInt],
+//         validate: ([num1, num2]) => (num1 < num2 ? true : 'The first number must be smaller')
+//       }
+//     }
+//   },
+//   optionalProps: ['args']
+// }
+
 const commandOptionsFormat = {
   _: {
-    inputs: {
+    primaryArgs: [String],
+    args: {
       _: Object,
       standard: {
         _: {
@@ -15,14 +31,7 @@ const commandOptionsFormat = {
           normalize: Function,
           question: trimmedString,
           default: ANY,
-          args: {
-            // THe number of arguments can also be specified or be given as a range
-            _: normalInt,
-            _or: {
-              _: [normalInt, normalInt],
-              validate: ([num1, num2]) => (num1 < num2 ? true : 'The first number must be smaller')
-            }
-          }
+          required: Boolean
         },
         allOptional: true,
         nullable: true
@@ -31,6 +40,13 @@ const commandOptionsFormat = {
     },
     defaultCommand: Boolean
   },
+  validate: config =>
+    !config.hasOwnProperty('primaryArgs') ||
+    (typeof config.args == 'object' &&
+      config.args !== null &&
+      config.primaryArgs.every(arg => config.args.hasOwnProperty(arg)))
+      ? true
+      : 'Invalid Primary Args',
   allOptional: true
 }
 
@@ -59,7 +75,6 @@ function parseCommandOptions(input, parserOptions = {}) {
   //options = { ...defaultOptions, ...options }
   delete options.name
   sanitize(name, nameFormat)
-  console.log('x', options)
   sanitize(options, commandOptionsFormat)
   if (options.defaultCommand === true) {
     if (defaultCommand !== null) {
@@ -69,8 +84,8 @@ function parseCommandOptions(input, parserOptions = {}) {
     }
     defaultCommand = name
   }
-  if (options.hasOwnProperty('inputs'))
-    options.inputs = options.inputs.map(input => (input === null ? {} : input)) // Replace the null input options with blank objects
+  //if (options.hasOwnProperty('inputs'))
+  //  options.inputs = options.inputs.map(input => (input === null ? {} : input)) // Replace the null input options with blank objects
   return { options, handler, name }
 }
 

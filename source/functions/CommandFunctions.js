@@ -1,11 +1,11 @@
 import parseCommand from './parseCommand'
-import getExports from './getExports'
 import readCLI from './readCLI'
 import stripProperties from './stripProperties'
 import { sanitize } from 'sandhands'
 import { inspect } from 'util'
-
-const stripFluffRegex = /[\-\.\s]+/gi
+import onlyUnique from './onlyUnique'
+import stripString from './stripString'
+import createCommandHandler from './createCommandHandler'
 
 class CommandFunctions {
   constructor(commandFunctions, options = {}) {
@@ -20,23 +20,32 @@ class CommandFunctions {
         defaultCommand = commandOptions.name
       }
     })
+    this.options = options
     commandsConfig.commands = commandMap
     commandsConfig.defaultCommand = defaultCommand
+    if (typeof options?.exports == 'object' && options?.exports !== null) {
+      this.staticExports = options.exports
+    } else {
+      this.staticExports = {}
+    }
+    this.propertyList = Object.keys(this.commandsConfig.commands)
+      .concat(Object.keys(this.staticExports))
+      .filter(onlyUnique)
     this.options = options
     this.commandsOptions = stripProperties(this.options, ['defaultCommand'], true)
     this.getExports = this.getExports.bind(this)
     this.runCLI = this.runCLI.bind(this)
     this.autoRun = this.autoRun.bind(this)
-    this.exportsObject = null
+    this.exports = null
   }
-  getExports() {
-    if (this.exportsObject !== null) return this.exportsObject
-    let newExports = getExports(this.commandsConfig, this.commandsOptions)
-    if (typeof this.options.exports == 'object' && this.options.exports !== null) {
-      newExports = { ...this.options.exports, ...newExports }
-    }
-    return (this.exportsObject = newExports)
-  }
+  // getExports() {
+  //   if (this.exportsObject !== null) return this.exportsObject
+  //   let newExports = getExports(this.commandsConfig, this.commandsOptions)
+  //   if (typeof this.options.exports == 'object' && this.options.exports !== null) {
+  //     newExports = { ...this.options.exports, ...newExports }
+  //   }
+  //   return (this.exportsObject = newExports)
+  // }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
     const { commandName, options, primaryArgs = [], format } = cliArgs
@@ -49,7 +58,7 @@ class CommandFunctions {
       output = output(...primaryArgs, options)
     }
     output = await output
-    console.log(inspect(output))
+    //console.log(inspect(output))
     return output
   }
   autoRun(doExit = true) {
@@ -72,15 +81,38 @@ class CommandFunctions {
       return this.getExports()
     }
   }
-  getExport(name, exportsObject = null) {
+  getExports() {
+    if (this.exports !== null) return this.exports
+    const output = {}
+    this.propertyList.forEach(property => {
+      output[property] = this.getExport(property)
+    })
+    this.exports = output
+    return output
+  }
+  getExport(name = null) {
+    if (name === null) name = this.commandsConfig.defaultCommand
     if (typeof name != 'string') throw new Error('Invalid Command Name')
-    if (exportsObject === null) exportsObject = this.getExports()
-    const searchName = name.replace(stripFluffRegex, '').toLowerCase()
-    const match = Object.keys(exportsObject).find(
-      key => key.replace(stripFluffRegex, '').toLowerCase() === searchName
+
+    const searchName = stripString(name)
+    const commandMatch = Object.keys(this.commandsConfig.commands).find(
+      commandName => stripString(commandName) === searchName
     )
-    if (!match) throw new Error(`Missing the command "${name}", try the help command`)
-    return exportsObject[match]
+    const exportMatch = Object.keys(this.staticExports).find(
+      exportName => stripString(exportName) === searchName
+    )
+    if (commandMatch && exportMatch) throw new Error('Found duplicate exports for ' + name)
+    let output
+    if (commandMatch) {
+      const commandConfig = this.commandsConfig.commands[commandMatch]
+      output = createCommandHandler(commandConfig)
+    } else if (exportMatch) {
+      output = this.staticExports[exportMatch]
+    } else {
+      if (!commandMatch && !exportMatch)
+        throw new Error(`Missing the command "${name}", try the help command`)
+    }
+    return output
   }
 }
 

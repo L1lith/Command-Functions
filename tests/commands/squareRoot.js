@@ -4,5 +4,11 @@ function squareRoot(x) {
 
 module.exports = {
   handler: squareRoot,
-  args: 1
+  primaryArgs: ['number'],
+  args: {
+    number: {
+      format: { _: Number, finite: true },
+      required: true
+    }
+  }
 }

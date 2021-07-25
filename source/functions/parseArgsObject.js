@@ -1,4 +1,4 @@
-function parseoptions(argsObject, parserOptions = {}) {
+function parseArgsObject(argsObject, parserOptions = {}) {
   //if (!Array.isArray(args)) throw new Error('Please supply an argument array')
   let options = { ...argsObject }
   const { commandName = null } = parserOptions
@@ -30,4 +30,4 @@ function parseoptions(argsObject, parserOptions = {}) {
   return { options, primaryArgs, commandName }
 }
 
-export default parseoptions
+export default parseArgsObject

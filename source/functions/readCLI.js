@@ -31,6 +31,10 @@ function readCLI(config, options, minimistOptions = null) {
 
   const parsedArgs = parseArgsObject(args, { commandName })
   if (typeof parsedArgs.commandName != 'string') throw new Error('No Command Requested')
+  //console.log(parsedArgs, config, config.commands[commandName], commandName)
+  if (config.commands.hasOwnProperty(commandName)) {
+    const command = config.commands[command]
+  }
   //if (!commandMap.hasOwnProperty(parsedArgs.commandName))
   //throw new Error(`Invalid command ${commandName} requested`)
   return parsedArgs

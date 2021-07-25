@@ -13,10 +13,7 @@ function getExports(config = null) {
   const exports = {}
   Object.values(commands).forEach(command => {
     exports[command.name] = function (...args) {
-      const { options, primaryArgs } = normalizeFunctionArguments(args, {
-        commandName: command.name
-      })
-
+      const { options, primaryArgs } = normalizeFunctionArguments(args, command)
       return command.handler(primaryArgs, options)
     }
   })
