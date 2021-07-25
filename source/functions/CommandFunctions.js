@@ -6,6 +6,7 @@ import { inspect } from 'util'
 import onlyUnique from './onlyUnique'
 import stripString from './stripString'
 import createCommandHandler from './createCommandHandler'
+import Options from './Options'
 
 class CommandFunctions {
   constructor(commandFunctions, options = {}) {
@@ -36,7 +37,7 @@ class CommandFunctions {
     this.getExports = this.getExports.bind(this)
     this.runCLI = this.runCLI.bind(this)
     this.autoRun = this.autoRun.bind(this)
-    this.exports = null
+    this.exports = {}
   }
   // getExports() {
   //   if (this.exportsObject !== null) return this.exportsObject
@@ -54,11 +55,12 @@ class CommandFunctions {
     }
 
     let output = this.getExport(commandName)
+    //console.log('m', primaryArgs, options)
     if (typeof output == 'function') {
-      output = output(...primaryArgs, options)
+      output = output(primaryArgs, new Options(options))
     }
     output = await output
-    //console.log(inspect(output))
+    console.log(inspect(output))
     return output
   }
   autoRun(doExit = true) {
@@ -82,25 +84,24 @@ class CommandFunctions {
     }
   }
   getExports() {
-    if (this.exports !== null) return this.exports
-    const output = {}
     this.propertyList.forEach(property => {
-      output[property] = this.getExport(property)
+      this.getExport(property)
     })
-    this.exports = output
-    return output
+    return this.exports
   }
   getExport(name = null) {
     if (name === null) name = this.commandsConfig.defaultCommand
     if (typeof name != 'string') throw new Error('Invalid Command Name')
 
     const searchName = stripString(name)
+    //if (this.exports.hasOwnProperty(searchName)) return this.exports[searchName]
     const commandMatch = Object.keys(this.commandsConfig.commands).find(
       commandName => stripString(commandName) === searchName
     )
     const exportMatch = Object.keys(this.staticExports).find(
       exportName => stripString(exportName) === searchName
     )
+    const match = commandMatch || exportMatch
     if (commandMatch && exportMatch) throw new Error('Found duplicate exports for ' + name)
     let output
     if (commandMatch) {
@@ -112,6 +113,7 @@ class CommandFunctions {
       if (!commandMatch && !exportMatch)
         throw new Error(`Missing the command "${name}", try the help command`)
     }
+    this.exports[match] = output
     return output
   }
 }
