@@ -54,6 +54,9 @@ function createCommandHandler(commandConfig) {
     })
     Object.entries(argsOutput).forEach(([arg, value]) => {
       const argOptions = commandConfig.options.args[arg] || {}
+      if (argOptions.hasOwnProperty('normalize')) {
+        value = argOptions.normalize(value)
+      }
       if (argOptions.hasOwnProperty('format')) sanitize(value, argOptions.format)
       const primaryArgsPosition = commandConfig.options.primaryArgs.indexOf(arg)
       if (primaryArgsPosition >= 0) {

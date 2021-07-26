@@ -4,8 +4,8 @@ const library = require('../../library')
 
 describe('the saySomething function is exported correctly', () => {
   it('the saySomething function returns the correct value', () => {
-    expect(library.saySomething()).to.equal('hello world') // Uses the default value
-    expect(library.saySomething('hi there')).to.equal('hi there')
+    expect(library.saySomething()).to.equal('HELLO WORLD') // Uses the default value
+    expect(library.saySomething('hi there')).to.equal('HI THERE')
   })
   it('throws with invalid args', () => {
     expect(() => {
