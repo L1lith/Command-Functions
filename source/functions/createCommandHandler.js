@@ -30,16 +30,20 @@ function createCommandHandler(commandConfig) {
         primaryArgs[index] = argsOutput[expectedArg] = args[index]
       })
     }
-    if (options !== null)
+    if (typeof options == 'object' && options !== null)
       Object.entries(options).forEach(([arg, value]) => {
         if (arg === '_') return // skip for now
         const argSearchString = stripString(arg)
         const argMatch = allowedOptions.find(option => stripString(option) === argSearchString)
         if (!argMatch) throw new Error(`The argument "${arg}" is not accepted by the command`)
-        const argOptions = commandConfig.options.args[arg]
-        if (argOptions.hasOwnProperty('format')) sanitize(value, argOptions.format)
         const primaryArgsPosition = commandConfig.options.primaryArgs.indexOf(argMatch)
         if (primaryArgsPosition >= 0) {
+          if (primaryArgs.hasOwnProperty(primaryArgsPosition))
+            throw new Error(
+              `Duplicate Argument Received for Primary Argument #${
+                primaryArgsPosition + 1
+              } "${arg}"`
+            )
           primaryArgs[primaryArgsPosition] = value
         }
         argsOutput[argMatch] = value
@@ -47,6 +51,10 @@ function createCommandHandler(commandConfig) {
     requiredOptions.forEach(requiredOption => {
       if (!argsOutput.hasOwnProperty(requiredOption))
         throw new Error(`Missing the "${requiredOption}" argument`)
+    })
+    Object.entries(argsOutput).forEach(([arg, value]) => {
+      const argOptions = commandConfig.options.args[arg] || {}
+      if (argOptions.hasOwnProperty('format')) sanitize(value, argOptions.format)
     })
     return commandConfig.handler(primaryArgs, argsOutput)
   }
