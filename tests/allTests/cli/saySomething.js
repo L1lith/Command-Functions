@@ -1,7 +1,6 @@
 const chai = require('chai')
 const chaiExec = require('@jsdevtools/chai-exec')
 const { expect } = chai
-const { version } = require('../../../package.json')
 
 chai.use(chaiExec)
 
