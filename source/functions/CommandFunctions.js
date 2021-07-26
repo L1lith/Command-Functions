@@ -60,7 +60,7 @@ class CommandFunctions {
       output = output(...primaryArgs, new Options(options))
     }
     output = await output
-    console.log(inspect(output))
+    if (output !== undefined) console.log(inspect(output)) // Do not log if it's undefined (hence it returne dnothing)
     return output
   }
   autoRun(doExit = true) {

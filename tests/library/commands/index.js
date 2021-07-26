@@ -1,3 +1,4 @@
 const squareRoot = require('./squareRoot')
+const saySomething = require('./saySomething')
 
-module.exports = { squareRoot }
+module.exports = { squareRoot, saySomething }
