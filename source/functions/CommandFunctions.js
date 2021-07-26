@@ -57,7 +57,7 @@ class CommandFunctions {
     let output = this.getExport(commandName)
     //console.log('m', primaryArgs, options)
     if (typeof output == 'function') {
-      output = output(primaryArgs, new Options(options))
+      output = output(...primaryArgs, new Options(options))
     }
     output = await output
     console.log(inspect(output))

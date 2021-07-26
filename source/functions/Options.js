@@ -6,4 +6,9 @@ class Options {
   }
 }
 
-export default Options
+export default new Proxy(Options, {
+  apply: function (target, that, args) {
+    // Make the function execution behave as a constructor mirror without requiring "new"
+    return new Options(...args)
+  }
+})

@@ -6,6 +6,9 @@ function createCommandHandler(commandConfig) {
   //console.log('n', commandConfig)
   const allowedOptions = Object.keys(commandConfig.options.args)
   const expectedPrimaryArgs = commandConfig.options.primaryArgs
+  const requiredOptions = Object.entries(commandConfig.options.args)
+    .filter(([key, config]) => config.required === true)
+    .map(([key, config]) => key)
   return (...args) => {
     let options = null
     if (args.length > 0) {
@@ -41,6 +44,10 @@ function createCommandHandler(commandConfig) {
         }
         argsOutput[argMatch] = value
       })
+    requiredOptions.forEach(requiredOption => {
+      if (!argsOutput.hasOwnProperty(requiredOption))
+        throw new Error(`Missing the "${requiredOption}" argument`)
+    })
     return commandConfig.handler(primaryArgs, argsOutput)
   }
 }
