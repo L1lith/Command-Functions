@@ -12,6 +12,7 @@
     "@babel/core": "^7.12.16",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.16",
+    "@jsdevtools/chai-exec": "^2.1.1",
     "chai": "^4.3.0",
     "deepmerge": "^4.2.2",
     "generate-source-map": "0.0.5",
