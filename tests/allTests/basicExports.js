@@ -8,7 +8,8 @@ const exportsFormat = {
   version: String,
   testProp: Number,
   squareRoot: Function,
-  saySomething: Function
+  saySomething: Function,
+  multiply: Function
 }
 
 describe('the library has the correct exports', () => {

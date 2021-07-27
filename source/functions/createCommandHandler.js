@@ -6,7 +6,7 @@ function createCommandHandler(commandConfig) {
   //console.log('n', commandConfig)
   const optionsEntries = Object.entries(commandConfig.options.args)
   const allowedOptions = Object.keys(commandConfig.options.args)
-  const expectedPrimaryArgs = commandConfig.options.primaryArgs
+  const expectedPrimaryArgs = commandConfig.options.primaryArgs || null
   const requiredOptions = optionsEntries
     .filter(([key, config]) => config.required === true)
     .map(([key, config]) => key)
@@ -33,7 +33,7 @@ function createCommandHandler(commandConfig) {
     const primaryArgs = []
     if (!Array.isArray(args)) throw new Error('args must be an array')
     //if (typeof options !== 'object') throw new Error('Options must be an object')
-    if (args.length > 0) {
+    if (args.length > 0 && Array.isArray(expectedPrimaryArgs)) {
       if (args.length !== expectedPrimaryArgs.length)
         throw new Error(`Expected ${expectedPrimaryArgs.length} primary arguments`)
       expectedPrimaryArgs.forEach((expectedArg, index) => {
@@ -63,7 +63,7 @@ function createCommandHandler(commandConfig) {
         primaryArgs[primaryArgsPosition] = value
       }
     })
-    return commandConfig.handler(...primaryArgs, argsOutput)
+    return commandConfig.handler(...primaryArgs, new Options(argsOutput))
   }
 }
 

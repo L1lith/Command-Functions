@@ -55,7 +55,7 @@ const parserOptionsFormat = { _: { defaultName: { _: String, nullable: true } },
 function parseCommandOptions(input, parserOptions = {}) {
   sanitize(parserOptions, parserOptionsFormat)
   const { defaultName = null } = parserOptions
-  let options = {}
+  let options = { args: {} }
   let handler = null
   if (typeof input == 'object' && input !== null) {
     options = { ...options, ...input }
