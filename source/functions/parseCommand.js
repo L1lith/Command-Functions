@@ -22,7 +22,6 @@ const nameFormat = Format(String).regex(/^[a-z0-9]+$/i)
 
 const commandOptionsFormat = {
   _: {
-    primaryArgs: [String],
     args: {
       _: Object,
       standard: {
@@ -31,7 +30,9 @@ const commandOptionsFormat = {
           normalize: Function,
           question: trimmedString,
           default: ANY,
-          required: Boolean
+          required: Boolean,
+          argsPosition: { _: Number, integer: true } // The argument order priority
+          //primaryArgsList: Boolean // Enable to get an array of all arguments that match
         },
         allOptional: true,
         nullable: true
