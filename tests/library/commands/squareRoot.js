@@ -1,5 +1,5 @@
-function squareRoot(x) {
-  return Math.sqrt(x)
+function squareRoot(number) {
+  return Math.sqrt(number)
 }
 
 module.exports = {
@@ -10,5 +10,6 @@ module.exports = {
       required: true,
       argsPosition: 0
     }
-  }
+  },
+  noOptions: true
 }

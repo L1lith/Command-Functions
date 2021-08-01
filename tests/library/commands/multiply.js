@@ -1,5 +1,4 @@
 function multiply(...numbers) {
-  numbers.pop() // Remove the options
   if (numbers.length < 1) throw new Error('Must supply at least 1 number')
   let output = 1
   numbers.forEach(n => {
@@ -8,4 +7,8 @@ function multiply(...numbers) {
   return output
 }
 
-module.exports = multiply // Implicit Handler Syntax
+module.exports = {
+  handler: multiply,
+  allowBonusArgs: true,
+  noOptions: true
+}

@@ -4,6 +4,7 @@ import Options from './Options'
 
 function createCommandHandler(commandConfig) {
   //console.log('n', commandConfig)
+  const { allowBonusArgs = false, spreadArgs = true, noOptions = false } = commandConfig.options
   const optionsEntries = Object.entries(commandConfig.options.args)
   const allowedOptions = Object.keys(commandConfig.options.args)
   let primaryOptions = []
@@ -16,7 +17,7 @@ function createCommandHandler(commandConfig) {
     if (config.hasOwnProperty('argsPosition')) {
       if (primaryOptions.hasOwnProperty(config.argsPosition))
         throw new Error(`Overlapping Options on Args Position ${config.argsPosition}`)
-      primaryOptions[config.argsPosition] = config.name
+      primaryOptions[config.argsPosition] = arg
     }
   })
   for (let i = 0; i < primaryOptions.length; i++) {
@@ -38,18 +39,18 @@ function createCommandHandler(commandConfig) {
     //if (!Array.isArray(args)) throw new Error('args must be an array')
     //if (typeof options !== 'object') throw new Error('Options must be an object')
     if (args.length > 0) {
-      args.forEach((primaryArg, index) => {
-        if (index >= primaryOptions.length) throw new Error(`Received too many primary arguments.`)
-        const argOptions = primaryOptions[index]
-        const normalizedValue = argOptions.hasOwnProperty('normalize')
-          ? argOptions.normalize(primaryArg)
-          : primaryArg
-        if (argOptions.hasOwnProperty('format')) {
-          if (valid(normalizedValue, argOptions.format)) {
-            // We found a valid primary argument
-            primaryArgs.push(normalizedValue)
-            argsOutput[argOptions.name] = normalizedValue
-          }
+      args.forEach((value, index) => {
+        if (!allowBonusArgs && index >= primaryOptions.length)
+          throw new Error(`Received too many primary arguments.`)
+        const argName = primaryOptions[index]
+        if (typeof argName == 'string') {
+          if (argsOutput.hasOwnProperty(argName))
+            throw new Error(
+              `Found overlapping options and primary args for the argument "${argName}"`
+            )
+          argsOutput[argName] = value
+        } else {
+          primaryArgs[index] = value
         }
       })
     }
@@ -67,17 +68,26 @@ function createCommandHandler(commandConfig) {
     })
     Object.entries(argsOutput).forEach(([arg, value]) => {
       const argOptions = commandConfig.options.args[arg] || {}
+      const { argsPosition } = argOptions
       if (argOptions.hasOwnProperty('normalize')) {
         value = argOptions.normalize(value)
       }
       if (argOptions.hasOwnProperty('format')) sanitize(value, argOptions.format)
       // TODO: Figure this out
-      const primaryArgsPosition = commandConfig.options.primaryArgs.indexOf(arg)
-      if (primaryArgsPosition >= 0) {
-        primaryArgs[primaryArgsPosition] = value
+      if (isFinite(argsPosition) && argsPosition >= 0) {
+        primaryArgs[argsPosition] = value
       }
     })
-    return commandConfig.handler(...primaryArgs, new Options(argsOutput))
+    let outputArgs = []
+    if (spreadArgs === true) {
+      outputArgs = [...primaryArgs]
+    } else {
+      outputArgs = [primaryArgs]
+    }
+    if (noOptions !== true) {
+      outputArgs.push(new Options(argsOutput))
+    }
+    return commandConfig.handler(...outputArgs)
   }
 }
 

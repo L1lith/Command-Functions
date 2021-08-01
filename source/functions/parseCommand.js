@@ -39,7 +39,10 @@ const commandOptionsFormat = {
       },
       nullable: true
     },
-    defaultCommand: Boolean
+    spreadArgs: Boolean,
+    allowBonusArgs: Boolean,
+    defaultCommand: Boolean,
+    noOptions: Boolean
   },
   validate: config =>
     !config.hasOwnProperty('primaryArgs') ||
