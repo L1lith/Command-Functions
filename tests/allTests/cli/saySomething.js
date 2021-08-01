@@ -4,7 +4,7 @@ const { expect } = chai
 
 chai.use(chaiExec)
 
-describe('SquareRoot in CLI', () => {
+describe('saySomething in CLI', () => {
   it('should return "HELLO WORLD" no arguments', () => {
     // Run your CLI
     const myCLI = chaiExec('node tests/library saySomething')

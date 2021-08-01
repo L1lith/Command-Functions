@@ -91,7 +91,7 @@ function createCommandHandler(commandConfig) {
     if (noOptions !== true) {
       outputArgs.push(new Options(argsOutput))
     }
-    return commandConfig.handler(...outputArgs)
+    return commandConfig.handler.apply(null, outputArgs)
   }
 }
 
