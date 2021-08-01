@@ -12,12 +12,12 @@ class CommandFunctions {
   constructor(commandFunctions, options = {}) {
     const commandsConfig = (this.commandsConfig = {})
     const commandMap = {}
-    let defaultCommand = null
+    let defaultCommand = ''
     Object.entries(commandFunctions).forEach(([commandName, commandConfig]) => {
       const commandOptions = parseCommand(commandConfig, { defaultName: commandName })
       commandMap[commandOptions.name] = commandOptions
       if (commandOptions.defaultCommand === true) {
-        if (defaultCommand !== null) throw new Error('Found multiple default commands')
+        if (defaultCommand) throw new Error('Found multiple default commands')
         defaultCommand = commandOptions.name
       }
     })
@@ -90,7 +90,7 @@ class CommandFunctions {
     return this.exports
   }
   getExport(name = null) {
-    if (name === null) name = this.commandsConfig.defaultCommand
+    if (name === null && this.defaultCommand) name = this.defaultCommand
     if (typeof name != 'string') throw new Error('Invalid Command Name')
 
     const searchName = stripString(name)

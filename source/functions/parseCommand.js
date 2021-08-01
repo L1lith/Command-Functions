@@ -80,14 +80,6 @@ function parseCommandOptions(input, parserOptions = {}) {
   delete options.name
   sanitize(name, nameFormat)
   sanitize(options, commandOptionsFormat)
-  if (options.defaultCommand === true) {
-    if (defaultCommand !== null) {
-      const err = new Error('Found multiple default commands')
-      err.fatal = true
-      throw err
-    }
-    defaultCommand = name
-  }
   //if (options.hasOwnProperty('inputs'))
   //  options.inputs = options.inputs.map(input => (input === null ? {} : input)) // Replace the null input options with blank objects
   return { options, handler, name }
