@@ -19,6 +19,9 @@ function createCommandHandler(commandConfig) {
         throw new Error(`Overlapping Options on Args Position ${config.argsPosition}`)
       primaryOptions[config.argsPosition] = arg
     }
+    if (config.hasOwnProperty('default')) {
+      defaults[arg] = config.default
+    }
   })
   for (let i = 0; i < primaryOptions.length; i++) {
     if (!(i in primaryOptions)) throw new Error('Non-consecutive primary options received')
@@ -44,10 +47,10 @@ function createCommandHandler(commandConfig) {
           throw new Error(`Received too many primary arguments.`)
         const argName = primaryOptions[index]
         if (typeof argName == 'string') {
-          if (argsOutput.hasOwnProperty(argName))
-            throw new Error(
-              `Found overlapping options and primary args for the argument "${argName}"`
-            )
+          // if (argsOutput.hasOwnProperty(argName))
+          //   throw new Error(
+          //     `Found overlapping options and primary args for the argument "${argName}"`
+          //   )
           argsOutput[argName] = value
         } else {
           primaryArgs[index] = value
@@ -62,6 +65,7 @@ function createCommandHandler(commandConfig) {
         if (!argMatch) throw new Error(`The argument "${arg}" is not accepted by the command`)
         argsOutput[argMatch] = value
       })
+
     requiredOptions.forEach(requiredOption => {
       if (!argsOutput.hasOwnProperty(requiredOption))
         throw new Error(`Missing the "${requiredOption}" argument`)
