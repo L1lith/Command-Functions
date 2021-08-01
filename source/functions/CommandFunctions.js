@@ -60,7 +60,7 @@ class CommandFunctions {
       output = output(...primaryArgs, new Options(options))
     }
     output = await output
-    if (output !== undefined) console.log(inspect(output)) // Do not log if it's undefined (hence it returne dnothing)
+    if (output !== undefined) console.log(inspect(output, { colors: true })) // TODO: Make Colors Toggleable
     return output
   }
   autoRun(doExit = true) {
