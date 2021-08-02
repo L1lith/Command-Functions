@@ -12,18 +12,14 @@ class CommandFunctions {
   constructor(commandFunctions, options = {}) {
     const commandsConfig = (this.commandsConfig = {})
     const commandMap = {}
-    let defaultCommand = ''
+    // TODO: REMOVE THIS ITS SLOW
     Object.entries(commandFunctions).forEach(([commandName, commandConfig]) => {
       const commandOptions = parseCommand(commandConfig, { defaultName: commandName })
       commandMap[commandOptions.name] = commandOptions
-      if (commandOptions.defaultCommand === true) {
-        if (defaultCommand) throw new Error('Found multiple default commands')
-        defaultCommand = commandOptions.name
-      }
     })
     this.options = options
     commandsConfig.commands = commandMap
-    commandsConfig.defaultCommand = defaultCommand
+    commandsConfig.defaultCommand = options.defaultCommand || null
     if (typeof options?.exports == 'object' && options?.exports !== null) {
       this.staticExports = options.exports
     } else {
@@ -39,14 +35,14 @@ class CommandFunctions {
     this.autoRun = this.autoRun.bind(this)
     this.exports = {}
   }
-  // getExports() {
-  //   if (this.exportsObject !== null) return this.exportsObject
-  //   let newExports = getExports(this.commandsConfig, this.commandsOptions)
-  //   if (typeof this.options.exports == 'object' && this.options.exports !== null) {
-  //     newExports = { ...this.options.exports, ...newExports }
-  //   }
-  //   return (this.exportsObject = newExports)
-  // }
+  getExports() {
+    if (this.exportsObject !== null) return this.exportsObject
+    let newExports = getExports(this.commandsConfig, this.commandsOptions)
+    if (typeof this.options.exports == 'object' && this.options.exports !== null) {
+      newExports = { ...this.options.exports, ...newExports }
+    }
+    return (this.exportsObject = newExports)
+  }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
     const { commandName, options, primaryArgs = [], format } = cliArgs

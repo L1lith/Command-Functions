@@ -1,14 +1,14 @@
 const chai = require('chai')
 const chaiExec = require('@jsdevtools/chai-exec')
 const { expect } = chai
-const { version } = require('../../../package.json')
+const { version } = require('../../../../package.json')
 
 chai.use(chaiExec)
 
 describe('Version Export in CLI', () => {
   var myCLI
   before(() => {
-    myCLI = chaiExec('node tests/library version')
+    myCLI = chaiExec('node tests/library1 version')
   })
   it('should exit with a zero exit code', () => {
     // Run your CLI

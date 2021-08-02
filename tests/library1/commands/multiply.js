@@ -10,6 +10,5 @@ function multiply(...numbers) {
 module.exports = {
   handler: multiply,
   allowBonusArgs: true,
-  noOptions: true,
-  defaultCommand: true
+  noOptions: true
 }

@@ -1,6 +1,6 @@
 const chai = require('chai')
 const { assert, expect } = chai
-const library = require('../library')
+const library = require('../../library1')
 const { details } = require('sandhands')
 const { inspect } = require('util')
 

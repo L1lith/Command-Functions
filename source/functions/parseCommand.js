@@ -39,9 +39,9 @@ const commandOptionsFormat = {
       },
       nullable: true
     },
+    defaultCommand: String,
     spreadArgs: Boolean,
     allowBonusArgs: Boolean,
-    defaultCommand: Boolean,
     noOptions: Boolean
   },
   validate: config =>
