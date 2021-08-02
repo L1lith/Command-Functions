@@ -28,7 +28,7 @@
   "scripts": {
     "dev": "rollup -w -c",
     "build": "rollup -c",
-    "build-production": "NODE_ENV=production && rollup -c --environment NODE_ENV:production",
+    "build-production": "cross-env NODE_ENV=production rollup -c --environment NODE_ENV:production",
     "build-production-windows": "set NODE_ENV=production && rollup -c --environment NODE_ENV:production",
     "test": "mocha \"tests/allTests/**/*.js\"",
     "prepublishOnly": "npm run build-production&&npm run test",
