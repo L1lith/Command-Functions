@@ -14,6 +14,7 @@
     "@babel/preset-env": "^7.12.16",
     "@jsdevtools/chai-exec": "^2.1.1",
     "chai": "^4.3.0",
+    "cross-env": "^7.0.3",
     "deepmerge": "^4.2.2",
     "generate-source-map": "0.0.5",
     "mocha": "^8.3.0",
@@ -30,7 +31,7 @@
     "build-production": "NODE_ENV=production && rollup -c --environment NODE_ENV:production",
     "build-production-windows": "set NODE_ENV=production && rollup -c --environment NODE_ENV:production",
     "test": "mocha \"tests/allTests/**/*.js\"",
-    "prepublishOnly": "npm run test && npm run build-production",
+    "prepublishOnly": "npm run build-production&&npm run test",
     "publish-alias": "npm publish"
   },
   "repository": {
