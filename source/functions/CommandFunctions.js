@@ -7,9 +7,19 @@ import onlyUnique from './onlyUnique'
 import stripString from './stripString'
 import createCommandHandler from './createCommandHandler'
 import Options from './Options'
+import autoBind from 'auto-bind'
 
-class CommandFunctions {
+class CommandFunction {} // Placeholder class for Debug purposes
+
+const proxyHandlers = {
+  set: () => {
+    throw new Error('Cannot overwrite the library object')
+  }
+}
+
+class CommandFunction {
   constructor(commandFunctions, options = {}) {
+    autoBind(this)
     const commandsConfig = (this.commandsConfig = {})
     const commandMap = {}
     // TODO: REMOVE THIS ITS SLOW
@@ -34,14 +44,6 @@ class CommandFunctions {
     this.runCLI = this.runCLI.bind(this)
     this.autoRun = this.autoRun.bind(this)
     this.exports = {}
-  }
-  getExports() {
-    if (this.exportsObject !== null) return this.exportsObject
-    let newExports = getExports(this.commandsConfig, this.commandsOptions)
-    if (typeof this.options.exports == 'object' && this.options.exports !== null) {
-      newExports = { ...this.options.exports, ...newExports }
-    }
-    return (this.exportsObject = newExports)
   }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
@@ -80,6 +82,10 @@ class CommandFunctions {
     }
   }
   getExports() {
+    return new Proxy(output, {
+      get: (target, prop) => this.getExport(prop),
+      ...proxyHandlers
+    })
     this.propertyList.forEach(property => {
       this.getExport(property)
     })
