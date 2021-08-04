@@ -1,34 +1,30 @@
 {
   "name": "command-functions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Create libraries that function as both CLI and js libraries at the same time",
-  "main": "index.js",
+  "main": "./dist/Command-Functions.js",
+  "source": "source/index.js",
   "dependencies": {
+    "auto-bind": "^4.0.0",
+    "microbundle": "^0.13.3",
     "minimist": "^1.2.5",
     "sandhands": "^1.8.9"
   },
+  "files": [
+    "/dist/Sandhands.js",
+    "/dist/Sandhands.js.map",
+    "LICENSE.md"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/plugin-transform-runtime": "^7.12.15",
-    "@babel/preset-env": "^7.12.16",
     "@jsdevtools/chai-exec": "^2.1.1",
-    "chai": "^4.3.0",
+    "chai": "^4.3.4",
     "cross-env": "^7.0.3",
-    "deepmerge": "^4.2.2",
-    "generate-source-map": "0.0.5",
-    "mocha": "^8.3.0",
-    "rollup": "^1.27.8",
-    "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-require-context": "^1.0.0",
-    "rollup-plugin-uglify": "^6.0.3"
+    "mocha": "^9.0.3"
   },
   "scripts": {
-    "dev": "rollup -w -c",
-    "build": "rollup -c",
-    "build-production": "cross-env NODE_ENV=production rollup -c --environment NODE_ENV:production",
-    "build-production-windows": "set NODE_ENV=production && rollup -c --environment NODE_ENV:production",
+    "build": "microbundle",
+    "build-production": "cross-env NODE_ENV=production microbundle",
+    "dev": "cross-env NODE_ENV=development microbundle watch",
     "test": "mocha \"tests/allTests/**/*.js\"",
     "prepublishOnly": "npm run build-production&&npm run test",
     "publish-alias": "npm publish"

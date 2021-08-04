@@ -1,4 +1,4 @@
-const { CommandFunctions } = require('../../dist/Shinput-commonjs')
+const { CommandFunctions } = require('../../dist/command-functions')
 const commands = require('./commands')
 
 console.log('m')

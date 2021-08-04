@@ -1,9 +1,3 @@
-const { CommandFunctions } = require('./dist/Shinput-commonjs')
+const library1 = require('./tests/library1')
 
-const app = new CommandFunctions({
-  version: (...args) => {
-    console.log(...args)
-  }
-})
-
-module.exports = app.autoRun()
+console.log(Object.keys(library1))

@@ -9,15 +9,15 @@ import createCommandHandler from './createCommandHandler'
 import Options from './Options'
 import autoBind from 'auto-bind'
 
-class CommandFunction {} // Placeholder class for Debug purposes
+const proxyHandlers = {}
+proxyHandlers.set =
+  proxyHandlers.deleteProperty =
+  proxyHandlers.defineProperty =
+    () => {
+      throw new Error('Cannot overwrite the library object')
+    }
 
-const proxyHandlers = {
-  set: () => {
-    throw new Error('Cannot overwrite the library object')
-  }
-}
-
-class CommandFunction {
+class CommandFunctions {
   constructor(commandFunctions, options = {}) {
     autoBind(this)
     const commandsConfig = (this.commandsConfig = {})
@@ -82,16 +82,40 @@ class CommandFunction {
     }
   }
   getExports() {
-    return new Proxy(output, {
-      get: (target, prop) => this.getExport(prop),
+    const proxyProtocol = {
+      ownKeys: this.getKeys,
+      enumerate: this.getKeys,
+      get: (target, prop) => {
+        this.getExport(prop)
+        return Reflect.get(target, prop)
+      },
+      has: (target, prop) => {
+        const { type, match } = this.findProp(prop)
+        return match !== null
+      },
+      getOwnPropertyDescriptor: (target, prop) => {
+        if (this.findProp(prop).match !== null) {
+          // called for every property
+          return {
+            value: this.getExport(prop),
+            enumerable: true,
+            configurable: false,
+            writable: false
+            /* ...other flags, probable "value:..." */
+          }
+        } else {
+          //return { enumerable: false, configurable: false }
+        }
+      },
       ...proxyHandlers
-    })
-    this.propertyList.forEach(property => {
-      this.getExport(property)
-    })
-    return this.exports
+    }
+    return new Proxy(this.exports, proxyProtocol)
   }
-  getExport(name = null) {
+  getKeys() {
+    //console.log('x', this.propertyList)
+    return this.propertyList
+  }
+  findProp(name = null) {
     if (name === null && this.defaultCommand) name = this.defaultCommand
     if (typeof name != 'string') throw new Error('Invalid Command Name')
 
@@ -103,19 +127,32 @@ class CommandFunction {
     const exportMatch = Object.keys(this.staticExports).find(
       exportName => stripString(exportName) === searchName
     )
-    const match = commandMatch || exportMatch
     if (commandMatch && exportMatch) throw new Error('Found duplicate exports for ' + name)
-    let output
-    if (commandMatch) {
-      const commandConfig = this.commandsConfig.commands[commandMatch]
-      output = createCommandHandler(commandConfig)
-    } else if (exportMatch) {
-      output = this.staticExports[exportMatch]
-    } else {
-      if (!commandMatch && !exportMatch)
-        throw new Error(`Missing the command "${name}", try the help command`)
+    return {
+      type: commandMatch ? 'command' : exportMatch ? 'export' : 'none',
+      match: commandMatch || exportMatch || null
     }
-    this.exports[match] = output
+  }
+  getExport(name) {
+    const { match, type } = this.findProp(name)
+    let output
+    if (type === 'command') {
+      const commandConfig = this.commandsConfig.commands[match]
+      output = createCommandHandler(commandConfig)
+    } else if (type === 'export') {
+      output = this.staticExports[match]
+    } else {
+      throw new Error(`Missing the export "${name}", try the help command`)
+    }
+    if (this.exports.hasOwnProperty(match)) return this.exports[match]
+    Object.defineProperty(this.exports, match, {
+      value: output,
+      enumerable: true,
+      configurable: false,
+      writable: false
+      /* ...other flags, probable "value:..." */
+    })
+
     return output
   }
 }
