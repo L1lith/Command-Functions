@@ -44,6 +44,7 @@ class CommandFunctions {
     this.runCLI = this.runCLI.bind(this)
     this.autoRun = this.autoRun.bind(this)
     this.exports = {}
+    this.exports.__proto__.valueOf = this.getFlushedExports()
   }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
@@ -80,6 +81,10 @@ class CommandFunctions {
     } else {
       return this.getExports()
     }
+  }
+  getFlushedExports() {
+    this.propertyList.forEach(prop => this.getExport(prop))
+    return this.getExports()
   }
   getExports() {
     const proxyProtocol = {
@@ -150,7 +155,6 @@ class CommandFunctions {
       enumerable: true,
       configurable: false,
       writable: false
-      /* ...other flags, probable "value:..." */
     })
 
     return output
