@@ -21,6 +21,14 @@ function stringifySandhandsFormat(format) {
         })
         .join(chalk.white(', ')) + chalk.white(' }')
     return output
+  } else if (Array.isArray(format)) {
+    let output = chalk.white('[ ')
+    output += format.map(
+      (value => {
+        return stringifySandhandsFormat(value)
+      }).join(chalk.white(', ')) + chalk.white(' ]')
+    )
+    return output
   } else {
     return util.inspect(format, { colors: true })
   }

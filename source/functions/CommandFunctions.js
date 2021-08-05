@@ -212,6 +212,11 @@ class CommandFunctions {
         const { args = {}, description } = options
         console.log(chalk.green('Command: ' + chalk.cyan(name)))
         if (options.hasOwnProperty('description')) console.log(chalk.yellow(description))
+        if (options.hasOwnProperty('aliases')) {
+          console.log(
+            chalk.green('aliases: ') + chalk.white(options.aliases.map(alias => alias).join(', '))
+          )
+        }
         displayList(
           Object.keys(args)
             .sort()
@@ -224,7 +229,7 @@ class CommandFunctions {
                   : '')
               )
             }),
-          chalk.blue('Command Args')
+          chalk.green('Args')
         )
         if (options?.mode === 'node') return config
       } else if (type === 'export') {

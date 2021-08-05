@@ -20,7 +20,7 @@ describe('the help command', () => {
     expect(myCLI).to.exit.with.code(0)
     expect(myCLI).stdout.to.contain('Command: saySomething')
     expect(myCLI).stdout.to.contain('Says a thing or whatever')
-    expect(myCLI).stdout.to.contain('Command Args')
+    expect(myCLI).stdout.to.contain('Args')
     expect(myCLI).stdout.to.contain('message')
     expect(myCLI).stdout.to.contain('format:')
   })
