@@ -1,24 +1,17 @@
 import { sanitize, Format, ANY } from 'sandhands'
+import stripString from './stripString'
 
 const trimmedString = { _: String, trimmed: true }
 const normalInt = { _: Number, min: 0, finite: true, integer: true }
 
 const nameFormat = Format(String).regex(/^[a-z0-9]+$/i)
 
-// const commandConfigFormat = {
-//   _: {
-//     handler: Function,
-//     args: {
-//       // THe number of arguments can also be specified or be given as a range
-//       _: normalInt,
-//       _or: {
-//         _: [normalInt, normalInt],
-//         validate: ([num1, num2]) => (num1 < num2 ? true : 'The first number must be smaller')
-//       }
-//     }
-//   },
-//   optionalProps: ['args']
-// }
+const aliasFormat = {
+  _: [String],
+  validate: strings =>
+    strings.every((string, index) => strings.indexOf(string) === index) ||
+    'all aliases must be unique'
+}
 
 const commandOptionsFormat = {
   _: {
@@ -40,6 +33,7 @@ const commandOptionsFormat = {
       nullable: true
     },
     defaultCommand: String,
+    aliases: aliasFormat,
     spreadArgs: Boolean,
     allowBonusArgs: Boolean,
     noOptions: Boolean
@@ -80,6 +74,10 @@ function parseCommandOptions(input, parserOptions = {}) {
   delete options.name
   sanitize(name, nameFormat)
   sanitize(options, commandOptionsFormat)
+  if (options.hasOwnProperty('aliases'))
+    options.aliases = options.aliases
+      .map(alias => stripString(alias))
+      .filter(string => string && string !== name) //remove empty strings and duplicates of the input name
   //if (options.hasOwnProperty('inputs'))
   //  options.inputs = options.inputs.map(input => (input === null ? {} : input)) // Replace the null input options with blank objects
   return { options, handler, name }

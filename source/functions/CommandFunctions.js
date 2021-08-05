@@ -22,18 +22,28 @@ class CommandFunctions {
     autoBind(this)
     const commandsConfig = (this.commandsConfig = {})
     const commandMap = {}
-    // TODO: REMOVE THIS ITS SLOW
+    const aliasMap = (this.aliasMap = {})
     Object.entries(commandFunctions).forEach(([commandName, commandConfig]) => {
       const commandOptions = parseCommand(commandConfig, { defaultName: commandName })
-      commandMap[commandOptions.name] = commandOptions
+      const { name } = commandOptions
+      const strippedName = stripString(name)
+      commandMap[name] = commandOptions
+      if (strippedName !== name) aliasMap[strippedName] = name
+      if (commandOptions.options.hasOwnProperty('aliases'))
+        commandOptions.options.aliases.forEach(alias => {
+          aliasMap[alias] = name
+        })
     })
     this.options = options
     commandsConfig.commands = commandMap
     commandsConfig.defaultCommand = options.defaultCommand || null
-    if (typeof options?.exports == 'object' && options?.exports !== null) {
-      this.staticExports = options.exports
-    } else {
-      this.staticExports = {}
+    this.staticExports = {}
+    if (typeof options.exports == 'object' && options.exports !== null) {
+      Object.entries(options.exports).forEach(([key, value]) => {
+        const strippedName = stripString(key)
+        if (strippedName !== key) aliasMap[strippedName] = key
+        this.staticExports[key] = value
+      })
     }
     this.propertyList = Object.keys(this.commandsConfig.commands)
       .concat(Object.keys(this.staticExports))
@@ -124,15 +134,20 @@ class CommandFunctions {
     if (name === null && this.defaultCommand) name = this.defaultCommand
     if (typeof name != 'string') throw new Error('Invalid Command Name')
 
-    const searchName = stripString(name)
+    let searchName = stripString(name)
+    if (this.aliasMap.hasOwnProperty(searchName)) {
+      searchName = this.aliasMap[searchName]
+    }
     //if (this.exports.hasOwnProperty(searchName)) return this.exports[searchName]
-    const commandMatch = Object.keys(this.commandsConfig.commands).find(
-      commandName => stripString(commandName) === searchName
+    let commandMatch = Object.keys(this.commandsConfig.commands).find(
+      commandName => commandName === searchName
     )
     const exportMatch = Object.keys(this.staticExports).find(
-      exportName => stripString(exportName) === searchName
+      exportName => exportName === searchName
     )
-    if (commandMatch && exportMatch) throw new Error('Found duplicate exports for ' + name)
+    if (commandMatch && exportMatch) {
+      throw new Error('Found duplicate exports for ' + name)
+    }
     return {
       type: commandMatch ? 'command' : exportMatch ? 'export' : 'none',
       match: commandMatch || exportMatch || null
