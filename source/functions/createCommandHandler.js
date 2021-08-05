@@ -4,7 +4,12 @@ import Options from './Options'
 
 function createCommandHandler(commandConfig) {
   //console.log('n', commandConfig)
-  const { allowBonusArgs = false, spreadArgs = true, noOptions = false } = commandConfig.options
+  const {
+    allowBonusArgs = false,
+    spreadArgs = true,
+    noOptions = false,
+    mode = 'node'
+  } = commandConfig.options
   const optionsEntries = Object.entries(commandConfig.options.args)
   const allowedOptions = Object.keys(commandConfig.options.args)
   let primaryOptions = []
@@ -28,7 +33,7 @@ function createCommandHandler(commandConfig) {
   }
 
   return (...args) => {
-    let options = null
+    let options = {}
     if (args.length > 0) {
       const lastArg = args[args.length - 1]
       if (lastArg instanceof Options) {
@@ -82,6 +87,7 @@ function createCommandHandler(commandConfig) {
         primaryArgs[argsPosition] = value
       }
     })
+    argsOutput.mode = mode
     let outputArgs = []
     if (spreadArgs === true) {
       outputArgs = [...primaryArgs]

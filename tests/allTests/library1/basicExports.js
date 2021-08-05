@@ -9,7 +9,8 @@ const exportsFormat = {
   testProp: Number,
   squareRoot: Function,
   saySomething: Function,
-  multiply: Function
+  multiply: Function,
+  help: Function
 }
 
 describe('the library has the correct exports', () => {

@@ -6,7 +6,7 @@
   "source": "source/index.js",
   "dependencies": {
     "auto-bind": "^4.0.0",
-    "microbundle": "^0.13.3",
+    "chalk": "^4.1.2",
     "minimist": "^1.2.5",
     "sandhands": "^1.8.9"
   },
@@ -19,6 +19,7 @@
     "@jsdevtools/chai-exec": "^2.1.1",
     "chai": "^4.3.4",
     "cross-env": "^7.0.3",
+    "microbundle": "^0.13.3",
     "mocha": "^9.0.3"
   },
   "scripts": {

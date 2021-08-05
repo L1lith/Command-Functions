@@ -8,6 +8,9 @@ import stripString from './stripString'
 import createCommandHandler from './createCommandHandler'
 import Options from './Options'
 import autoBind from 'auto-bind'
+import chalk from 'chalk'
+import displayList from './displayList'
+import { Console } from 'console'
 
 const proxyHandlers = {}
 proxyHandlers.set =
@@ -18,11 +21,26 @@ proxyHandlers.set =
     }
 
 class CommandFunctions {
-  constructor(commandFunctions, options = {}) {
+  constructor(commandFunctions = {}, options = {}) {
     autoBind(this)
     const commandsConfig = (this.commandsConfig = {})
     const commandMap = {}
     const aliasMap = (this.aliasMap = {})
+    if (typeof commandFunctions !== 'object' || commandFunctions === null)
+      throw new Error('Must supply a commandFunctions object')
+    commandFunctions = { ...commandFunctions }
+    if (!commandFunctions.hasOwnProperty('help'))
+      commandFunctions.help = {
+        handler: this.helpCommand,
+        spreadArgs: true,
+        args: {
+          command: {
+            format: { _: String, nullable: true },
+            argsPosition: 0,
+            default: null
+          }
+        }
+      }
     Object.entries(commandFunctions).forEach(([commandName, commandConfig]) => {
       const commandOptions = parseCommand(commandConfig, { defaultName: commandName })
       const { name } = commandOptions
@@ -174,6 +192,32 @@ class CommandFunctions {
     })
 
     return output
+  }
+  helpCommand(commandName, options) {
+    if (commandName === null) {
+      // Get the list of commands and exports
+      console.log(
+        chalk.yellow('To get help about a command, try:\n') +
+          chalk.green('help ' + chalk.bold('{command}'))
+      )
+      displayList(Object.keys(this.commandsConfig.commands), 'Commands')
+    } else {
+      // Get info about a specific command or export
+      const { match, type } = this.findProp(commandName)
+      if (type === 'command') {
+        const config = this.commandsConfig.commands[match]
+        const { name, options } = config
+        const { args, description } = options
+        console.log(chalk.green('Command: ' + chalk.cyan(name)))
+        if (options.hasOwnProperty('description')) console.log(chalk.yellow(description))
+        displayList(Object.keys(args), chalk.blue('Command Options'))
+        if (options?.mode === 'node') return config
+      } else if (type === 'export') {
+        throw new Error('Cannot get info about an export')
+      } else {
+        throw new Error(`Could not find the export or command "${commandName}"`)
+      }
+    }
   }
 }
 

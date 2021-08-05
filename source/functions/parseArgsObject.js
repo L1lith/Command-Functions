@@ -5,7 +5,7 @@ const libraryOptionsFormats = Object.entries({ noColors: Boolean })
 function parseArgsObject(argsObject, parserOptions = {}) {
   //if (!Array.isArray(args)) throw new Error('Please supply an argument array')
   let options = { ...argsObject }
-  const { commandName = null } = parserOptions
+  const { commandName = null, mode = 'node' } = parserOptions
   let { primaryArgs = [] } = parserOptions
   if (
     (primaryArgs.length > 0) +
@@ -39,7 +39,7 @@ function parseArgsObject(argsObject, parserOptions = {}) {
   })
 
   //console.log({ options, primaryArgs, commandName })
-  return { options, primaryArgs, commandName, libraryOptions }
+  return { options, primaryArgs, commandName, libraryOptions, mode }
 }
 
 export default parseArgsObject

@@ -29,7 +29,7 @@ function readCLI(config, options, minimistOptions = null) {
     args._ = args._.slice(1)
   }
 
-  const parsedArgs = parseArgsObject(args, { commandName })
+  const parsedArgs = parseArgsObject(args, { commandName, mode: 'cli' })
   if (typeof parsedArgs.commandName != 'string') throw new Error('No Command Requested')
   //console.log(parsedArgs, config, config.commands[commandName], commandName)
   if (config.commands.hasOwnProperty(commandName)) {
