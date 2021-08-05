@@ -13,9 +13,18 @@ describe('multiply in CLI', () => {
   })
   it('should work with aliases', () => {
     const myCLI = chaiExec('node tests/library1 product 5 6')
-    console.log('p', myCLI)
     expect(myCLI).to.exit.with.code(0)
     expect(myCLI).stdout.to.contain('30')
+  })
+  it('should support colors by default', () => {
+    const myCLI = chaiExec('node tests/library1 product 5 6')
+    expect(myCLI).to.exit.with.code(0)
+    expect(myCLI).stdout.to.equal('\x1B[33m30\x1B[39m\n')
+  })
+  it('should support disabling colors', () => {
+    const myCLI = chaiExec('node tests/library1 product 5 6 --noColors')
+    expect(myCLI).to.exit.with.code(0)
+    expect(myCLI).stdout.to.equal('30\n')
   })
   it('should throw with no arguments', () => {
     // Run your CLI
