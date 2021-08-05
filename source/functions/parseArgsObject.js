@@ -1,3 +1,7 @@
+import { sanitize } from 'sandhands'
+
+const libraryOptionsFormats = Object.entries({ noColors: Boolean })
+
 function parseArgsObject(argsObject, parserOptions = {}) {
   //if (!Array.isArray(args)) throw new Error('Please supply an argument array')
   let options = { ...argsObject }
@@ -24,10 +28,18 @@ function parseArgsObject(argsObject, parserOptions = {}) {
       : []
   delete options[commandName]
   delete options._
-  if (primaryArgs.length > 0) {
-  }
+  const libraryOptions = {}
+  libraryOptionsFormats.forEach(([key, format]) => {
+    if (options.hasOwnProperty(key)) {
+      const value = options[key]
+      delete options[key]
+      sanitize(value, format)
+      libraryOptions[key] = value
+    }
+  })
+
   //console.log({ options, primaryArgs, commandName })
-  return { options, primaryArgs, commandName }
+  return { options, primaryArgs, commandName, libraryOptions }
 }
 
 export default parseArgsObject

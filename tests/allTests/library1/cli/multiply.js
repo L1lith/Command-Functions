@@ -11,6 +11,12 @@ describe('multiply in CLI', () => {
     expect(myCLI).to.exit.with.code(0)
     expect(myCLI).stdout.to.contain('14')
   })
+  it('should work with aliases', () => {
+    const myCLI = chaiExec('node tests/library1 product 5 6')
+    console.log('p', myCLI)
+    expect(myCLI).to.exit.with.code(0)
+    expect(myCLI).stdout.to.contain('30')
+  })
   it('should throw with no arguments', () => {
     // Run your CLI
     const myCLI = chaiExec('node tests/library1 multiply')
