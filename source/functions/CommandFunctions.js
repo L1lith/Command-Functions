@@ -220,7 +220,7 @@ class CommandFunctions {
               return (
                 arg +
                 (optionConfig.hasOwnProperty('format')
-                  ? '\n    \\_ Format: ' + stringifySandhandsFormat(optionConfig.format)
+                  ? chalk.reset('\n |- format: ') + stringifySandhandsFormat(optionConfig.format)
                   : '')
               )
             }),
