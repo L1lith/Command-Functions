@@ -7,6 +7,7 @@
   "dependencies": {
     "auto-bind": "^4.0.0",
     "chalk": "^4.1.2",
+    "javascript-stringify": "^2.1.0",
     "minimist": "^1.2.5",
     "sandhands": "^1.8.9"
   },

@@ -11,6 +11,8 @@ import autoBind from 'auto-bind'
 import chalk from 'chalk'
 import displayList from './displayList'
 import { Console } from 'console'
+import util from 'util'
+import stringifySandhandsFormat from './stringifySandhandsFormat'
 
 const proxyHandlers = {}
 proxyHandlers.set =
@@ -88,7 +90,7 @@ class CommandFunctions {
       output = output(...primaryArgs, new Options(options))
     }
     output = await output
-    if (output !== undefined) console.log(inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
+    if (output !== undefined) console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
     return output
   }
   autoRun(doExit = true) {
@@ -200,17 +202,30 @@ class CommandFunctions {
         chalk.yellow('To get help about a command, try:\n') +
           chalk.green('help ' + chalk.bold('{command}'))
       )
-      displayList(Object.keys(this.commandsConfig.commands), 'Commands')
+      displayList(Object.keys(this.commandsConfig.commands).sort(), 'Commands')
     } else {
       // Get info about a specific command or export
       const { match, type } = this.findProp(commandName)
       if (type === 'command') {
         const config = this.commandsConfig.commands[match]
         const { name, options } = config
-        const { args, description } = options
+        const { args = {}, description } = options
         console.log(chalk.green('Command: ' + chalk.cyan(name)))
         if (options.hasOwnProperty('description')) console.log(chalk.yellow(description))
-        displayList(Object.keys(args), chalk.blue('Command Options'))
+        displayList(
+          Object.keys(args)
+            .sort()
+            .map(arg => {
+              const optionConfig = args[arg] || {}
+              return (
+                arg +
+                (optionConfig.hasOwnProperty('format')
+                  ? '\n    \\_ Format: ' + stringifySandhandsFormat(optionConfig.format)
+                  : '')
+              )
+            }),
+          chalk.blue('Command Args')
+        )
         if (options?.mode === 'node') return config
       } else if (type === 'export') {
         throw new Error('Cannot get info about an export')
