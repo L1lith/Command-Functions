@@ -1,8 +1,6 @@
 const { CommandFunctions } = require('../../dist/command-functions')
 const commands = require('./commands')
 
-console.log('m')
-
 const app = new CommandFunctions(commands, {
   defaultCommand: 'sayNothing'
 })
