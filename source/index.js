@@ -1,4 +1,4 @@
-//import loadCommandsFolder from './functions/loadCommandsFolder'
+import loadCommandsFolder from './functions/loadCommandsFolder'
 import { default as CommandFunctions } from './functions/CommandFunctions'
 
-export { CommandFunctions }
+export { CommandFunctions, loadCommandsFolder, CommandFunctions as default }
