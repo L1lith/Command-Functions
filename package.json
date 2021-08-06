@@ -2,7 +2,7 @@
   "name": "command-functions",
   "version": "0.0.3",
   "description": "Create libraries that function as both CLI and js libraries at the same time",
-  "main": "./dist/Command-Functions.js",
+  "main": "./dist/command-functions.js",
   "source": "source/index.js",
   "dependencies": {
     "auto-bind": "^4.0.0",
@@ -12,10 +12,13 @@
     "sandhands": "^1.8.9"
   },
   "files": [
-    "/dist/Sandhands.js",
-    "/dist/Sandhands.js.map",
+    "/dist/command-functions.js",
+    "/dist/command-functions.js.map",
     "LICENSE.md"
   ],
+  "optionalDependencies": {
+    "glob": "^7.1.7"
+  },
   "devDependencies": {
     "@jsdevtools/chai-exec": "^2.1.1",
     "chai": "^4.3.4",
