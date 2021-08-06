@@ -11,8 +11,6 @@ devDependencies:
   microbundle: 0.13.3
   mocha: 9.0.3
 lockfileVersion: 5.1
-optionalDependencies:
-  glob: 7.1.7
 packages:
   /@babel/code-frame/7.14.5:
     dependencies:
@@ -4350,7 +4348,6 @@ specifiers:
   chai: ^4.3.4
   chalk: ^4.1.2
   cross-env: ^7.0.3
-  glob: ^7.1.7
   javascript-stringify: ^2.1.0
   microbundle: ^0.13.3
   minimist: ^1.2.5

@@ -1,5 +1,5 @@
 # Command Functions
-Create libraries that serve both as NPM libraries and CLI tools automatically
+Create your own node libraries that work both as node libraries and CLI tools at the same time
 
 ## How it works
 #### Step 1 - Defining our Functions - Build a Command Map

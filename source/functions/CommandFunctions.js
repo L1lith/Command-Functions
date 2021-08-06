@@ -10,7 +10,6 @@ import Options from './Options'
 import autoBind from 'auto-bind'
 import chalk from 'chalk'
 import displayList from './displayList'
-import { Console } from 'console'
 import util from 'util'
 import stringifySandhandsFormat from './stringifySandhandsFormat'
 
