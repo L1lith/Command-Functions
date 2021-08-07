@@ -23,10 +23,15 @@ const commandOptionsFormat = {
           normalize: Function,
           question: trimmedString,
           default: ANY,
+          getDefault: Function,
           required: Boolean,
-          argsPosition: { _: Number, integer: true } // The argument order priority
+          argsPosition: { _: Number, integer: true, min: 0 } // The argument order priority
           //primaryArgsList: Boolean // Enable to get an array of all arguments that match
         },
+        validate: obj =>
+          !obj.hasOwnProperty('default') ||
+          !obj.hasOwnProperty('getDefault') ||
+          'Cannot supply the getDefault and the default prop at the same time',
         allOptional: true,
         nullable: true
       },

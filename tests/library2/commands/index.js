@@ -1,4 +1,5 @@
 const sayNothing = require('./sayNothing')
-const multiply = require('./divide')
+const divide = require('./divide')
+const fruit = require('./fruit')
 
-module.exports = { sayNothing, multiply }
+module.exports = { sayNothing, divide, fruit }

@@ -18,17 +18,18 @@ function readCLI(config, options, minimistOptions = null) {
   }
 
   const args = minimist(rawArgs)
-  let commandName = defaultCommand || null
+  let commandName = null
   if (
     Array.isArray(args._) &&
-    typeof args._[0] === 'string' &&
-    (commandName === null || commandMap.hasOwnProperty(args._[0]))
+    typeof args._[0] === 'string' //&&
+    //commandMap.hasOwnProperty(args._[0])
   ) {
     const commandRequest = args._[0]
     commandName = commandRequest
     args._ = args._.slice(1)
+  } else if (defaultCommand) {
+    commandName = defaultCommand
   }
-
   const parsedArgs = parseArgsObject(args, { commandName, mode: 'cli' })
   if (typeof parsedArgs.commandName != 'string') throw new Error('No Command Requested')
   //console.log(parsedArgs, config, config.commands[commandName], commandName)

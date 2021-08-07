@@ -26,6 +26,14 @@ function createCommandHandler(commandConfig) {
     }
     if (config.hasOwnProperty('default')) {
       defaults[arg] = config.default
+    } else if (config.hasOwnProperty('getDefault')) {
+      Object.defineProperty(defaults, arg, {
+        get: () => {
+          output = config.getDefault()
+          return output
+        },
+        enumerable: true
+      })
     }
   })
   for (let i = 0; i < primaryOptions.length; i++) {
