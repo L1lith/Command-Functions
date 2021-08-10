@@ -25,16 +25,19 @@ function argPrompt(question, argConfig) {
 
 function getAutoComplete(formatDetails, extraOptions = []) {
   const { format } = formatDetails
-  if (format === Boolean) return autoComplete(['true', 'false', 'yes', 'no'].concat(extraOptions))
+  if (format === Boolean) return autoComplete(['yes', 'no'].concat(extraOptions))
 }
+
+const truthy = ['yes', 'true', 'y']
+const falsy = ['false', 'no', 'n']
 
 function autoNormalize(value, formatDetails) {
   // Automatically helps us format our inputs correctly
   const { format, options } = formatDetails
   if (format === Boolean) {
     value = stripString(value)
-    if (value === 'yes' || value === 'true') return true
-    if (value === 'no' || value === 'false') return false
+    if (truthy.includes(value)) return true
+    if (falsy.includes(value)) return false
   } else if (format === String) {
     if (options.lowercase === true) value = value.toLowerCase()
     if (options.trimmed === true) value = value.trim()
