@@ -90,7 +90,7 @@ class CommandFunction {
     Object.keys(defaultGetters).forEach(key => {
       if (!(key in argsOutput)) {
         const output = defaultGetters[key]()
-        console.log(key, output)
+        //(key, output)
         const argConfig = commandConfig.options.args[key] || {}
         setArg(argsOutput, primaryArgs, key, argConfig, output, { throw: false })
       }

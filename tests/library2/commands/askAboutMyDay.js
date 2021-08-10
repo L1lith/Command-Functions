@@ -1,5 +1,7 @@
 function askAboutMyDay(response) {
-  return `I see... so to reiterate what you might say about today, your feelings on the matter were "${response}"`
+  return `I see... so to reiterate what you might say about today, you thought it was ${
+    response ? 'good' : 'bad'
+  }.`
 }
 
 module.exports = {

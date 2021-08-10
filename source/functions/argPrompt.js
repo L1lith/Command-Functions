@@ -15,9 +15,10 @@ function argPrompt(question, argConfig) {
       options.autocomplete = autoComplete
     }
   }
+  console.log(question)
   let response = prompt('> ', options)
   if (formatDetails !== null) {
-    response = autoNormalize(response, argConfig.format)
+    response = autoNormalize(response, formatDetails)
   }
   return response
 }
