@@ -2,6 +2,7 @@ import stripString from './stripString'
 import { sanitize, valid } from 'sandhands'
 import Options from './Options'
 import argPrompt from './argPrompt'
+import autoNormalize from './autoNormalize'
 
 class CommandFunction {
   constructor(commandConfig, options = {}) {
@@ -150,6 +151,7 @@ class CommandFunction {
 function setArg(outputArgs, primaryArgs, argName, argConfig, value, options = {}) {
   const shouldThrow = options.throw === true
   const { normalize, format, argsPosition } = argConfig
+  value = autoNormalize(value, format)
   if (argConfig.hasOwnProperty('normalize')) {
     value = normalize(value)
   }
