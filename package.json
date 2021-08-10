@@ -4,6 +4,9 @@
   "description": "Create libraries that function as both CLI and js libraries at the same time",
   "main": "./dist/command-functions.js",
   "source": "source/index.js",
+  "bin": {
+    "command-templates-test-library": "./tests/library1/index.js"
+  },
   "dependencies": {
     "auto-bind": "^4.0.0",
     "chalk": "^4.1.2",

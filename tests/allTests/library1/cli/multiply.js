@@ -38,6 +38,13 @@ describe('multiply in CLI', () => {
     expect(myCLI).to.exit.with.code(1)
     expect(myCLI).stderr.to.contain('Must supply at least 2 numbers')
   })
+  it('should function properly when installed as a command-line executable', () => {
+    // Note: must run "npm link ." before this test will pass
+
+    const myCLI = chaiExec('command-templates-test-library multiply 25 10')
+    expect(myCLI).to.exit.with.code(0)
+    expect(myCLI).stdout.to.contain('250')
+  })
   it('should list the aliases in the help command', () => {
     const myCLI = chaiExec('node tests/library1 help multiply')
     expect(myCLI).to.exit.with.code(0)

@@ -1,7 +1,7 @@
 import minimist from 'minimist'
 import parseArgsObject from './parseArgsObject'
 
-const nodeRegex = /(^|\/)node($|\.exe$)/
+const nodeRegex = /node($|\.exe$)/ // For testing whether being called via a global command or via node
 
 function readCLI(config, options, minimistOptions = null) {
   const { commandMap = {} } = config
@@ -17,7 +17,6 @@ function readCLI(config, options, minimistOptions = null) {
     }
     rawArgs.shift()
   }
-
   const args = minimist(rawArgs)
   let commandName = null
   if (

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { CommandFunctions } = require('../../dist/command-functions')
 const commands = require('./commands')
 const { version } = require('../../package.json')

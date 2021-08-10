@@ -1,7 +1,7 @@
 const defaultFruit = ['tomato', 'banana', 'grape']
 
 function fruit(fruitChoice) {
-  console.log(fruitChoice)
+  //console.log(fruitChoice)
   return `Picking a fresh ${fruitChoice} :)`
 }
 
