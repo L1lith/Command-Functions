@@ -1,6 +1,6 @@
 {
   "name": "command-functions",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Create libraries that function as both CLI and js libraries at the same time",
   "main": "./dist/command-functions.js",
   "source": "source/index.js",
