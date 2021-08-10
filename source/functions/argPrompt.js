@@ -13,12 +13,15 @@ function argPrompt(question, argConfig) {
     if (autoComplete) {
       options.autocomplete = autoComplete
     }
+    if (formatDetails.format === Boolean) {
+      question += ' (yes/no)'
+    }
   }
   console.log(question)
   let response = prompt('> ', options)
-  if (formatDetails !== null) {
-    response = autoNormalize(response, formatDetails)
-  }
+  //   if (formatDetails !== null) {
+  //     response = autoNormalize(response, formatDetails)
+  //   }
   return response
 }
 

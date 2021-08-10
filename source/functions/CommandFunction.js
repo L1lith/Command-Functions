@@ -151,7 +151,7 @@ class CommandFunction {
 function setArg(outputArgs, primaryArgs, argName, argConfig, value, options = {}) {
   const shouldThrow = options.throw === true
   const { normalize, format, argsPosition } = argConfig
-  value = autoNormalize(value, format)
+  if (argConfig.hasOwnProperty('format')) value = autoNormalize(value, format)
   if (argConfig.hasOwnProperty('normalize')) {
     value = normalize(value)
   }
