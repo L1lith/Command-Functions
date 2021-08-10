@@ -1,15 +1,12 @@
 import stripString from './stripString'
 import { sanitize, valid } from 'sandhands'
 import Options from './Options'
+import argPrompt from './argPrompt'
 
-function createCommandHandler(commandConfig) {
+function createCommandHandler(commandConfig, options = {}) {
   //console.log('n', commandConfig)
-  const {
-    allowBonusArgs = false,
-    spreadArgs = true,
-    noOptions = false,
-    mode = 'node'
-  } = commandConfig.options
+  const { mode = 'node' } = options
+  const { allowBonusArgs = false, spreadArgs = true, noOptions = false } = commandConfig.options
   const optionsEntries = Object.entries(commandConfig.options.args)
   const allowedOptions = Object.keys(commandConfig.options.args)
   let primaryOptions = []
@@ -17,30 +14,33 @@ function createCommandHandler(commandConfig) {
     .filter(([key, config]) => config.required === true)
     .map(([key, config]) => key)
 
-  const defaults = {}
+  var defaults = {}
+  var defaultGetters = {}
   optionsEntries.forEach(([arg, config]) => {
     if (config.hasOwnProperty('argsPosition')) {
       if (primaryOptions.hasOwnProperty(config.argsPosition))
         throw new Error(`Overlapping Options on Args Position ${config.argsPosition}`)
       primaryOptions[config.argsPosition] = arg
     }
+
+    if (config.hasOwnProperty('prompt') && mode === 'cli') {
+      console.log(arg, config, mode, config.hasOwnProperty('prompt'), mode === 'cli')
+      defaultGetters[arg] = () => argPrompt(config.prompt, config)
+    } else if (config.hasOwnProperty('getDefault')) {
+      defaultGetters[arg] = () => config.getDefault(mode)
+    }
     if (config.hasOwnProperty('default')) {
       defaults[arg] = config.default
-    } else if (config.hasOwnProperty('getDefault')) {
-      Object.defineProperty(defaults, arg, {
-        get: () => {
-          output = config.getDefault()
-          return output
-        },
-        enumerable: true
-      })
     }
   })
   for (let i = 0; i < primaryOptions.length; i++) {
     if (!(i in primaryOptions)) throw new Error('Non-consecutive primary options received')
   }
 
+  console.log('a', mode, defaults, defaultGetters)
   return (...args) => {
+    console.log('b', mode, defaults, defaultGetters)
+
     let options = {}
     if (args.length > 0) {
       const lastArg = args[args.length - 1]
@@ -50,7 +50,13 @@ function createCommandHandler(commandConfig) {
         args.pop()
       }
     }
+
     const argsOutput = { ...defaults }
+    Object.keys(defaultGetters).forEach(key => {
+      if (!(key in argsOutput)) {
+        argsOutput[key] = defaultGetters[key]()
+      }
+    })
     const primaryArgs = []
     //if (!Array.isArray(args)) throw new Error('args must be an array')
     //if (typeof options !== 'object') throw new Error('Options must be an object')
@@ -83,18 +89,19 @@ function createCommandHandler(commandConfig) {
       if (!argsOutput.hasOwnProperty(requiredOption))
         throw new Error(`Missing the "${requiredOption}" argument`)
     })
-    Object.entries(argsOutput).forEach(([arg, value]) => {
-      const argOptions = commandConfig.options.args[arg] || {}
-      const { argsPosition } = argOptions
-      if (argOptions.hasOwnProperty('normalize')) {
-        value = argOptions.normalize(value)
-      }
-      if (argOptions.hasOwnProperty('format')) sanitize(value, argOptions.format)
-      // TODO: Figure this out
-      if (isFinite(argsPosition) && argsPosition >= 0) {
-        primaryArgs[argsPosition] = value
-      }
-    })
+    // Object.entries(argsOutput).forEach(([argName, value]) => {
+    //   console.log('d', argName)
+    //   const argOptions = commandConfig.options.args[argName] || {}
+    //   const { argsPosition } = argOptions
+    //   if (argOptions.hasOwnProperty('normalize')) {
+    //     value = argOptions.normalize(value)
+    //   }
+    //   if (argOptions.hasOwnProperty('format')) sanitize(value, argOptions.format)
+    //   // TODO: Figure this out
+    //   if (isFinite(argsPosition) && argsPosition >= 0) {
+    //     primaryArgs[argsPosition] = value
+    //   }
+    // })
     argsOutput.mode = mode
     let outputArgs = []
     if (spreadArgs === true) {

@@ -1,6 +1,8 @@
 import minimist from 'minimist'
 import parseArgsObject from './parseArgsObject'
 
+const nodeRegex = /(^|\/)node($|\.exe$)/
+
 function readCLI(config, options, minimistOptions = null) {
   const { commandMap = {} } = config
   const { defaultCommand } = options
@@ -8,13 +10,12 @@ function readCLI(config, options, minimistOptions = null) {
   if (Array.isArray(minimistOptions) && minimistOptions.length > 0) {
     rawArgs = minimistOptions
   } else {
-    rawArgs = process.argv
-    if (rawArgs[0].endsWith('node.exe') || rawArgs[0] === 'node') {
+    rawArgs = [...process.argv]
+    if (nodeRegex.test(rawArgs[0])) {
       // Cut off an extra argument if the first command is node
-      rawArgs = rawArgs.slice(2)
-    } else {
-      rawArgs = rawArgs.slice(1)
+      rawArgs.shift()
     }
+    rawArgs.shift()
   }
 
   const args = minimist(rawArgs)
@@ -26,7 +27,7 @@ function readCLI(config, options, minimistOptions = null) {
   ) {
     const commandRequest = args._[0]
     commandName = commandRequest
-    args._ = args._.slice(1)
+    args._.shift()
   } else if (defaultCommand) {
     commandName = defaultCommand
   }

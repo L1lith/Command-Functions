@@ -5,7 +5,7 @@ import { sanitize } from 'sandhands'
 import { inspect } from 'util'
 import onlyUnique from './onlyUnique'
 import stripString from './stripString'
-import createCommandHandler from './createCommandHandler'
+import CommandFunction from './CommandFunction'
 import Options from './Options'
 import autoBind from 'auto-bind'
 import chalk from 'chalk'
@@ -68,12 +68,10 @@ class CommandFunctions {
       .concat(Object.keys(this.staticExports))
       .filter(onlyUnique)
     this.options = options
+    this.commandHandlers = {}
     this.commandsOptions = stripProperties(this.options, ['defaultCommand'], true)
-    this.getExports = this.getExports.bind(this)
-    this.runCLI = this.runCLI.bind(this)
-    this.autoRun = this.autoRun.bind(this)
     this.exports = {}
-    this.exports.__proto__.valueOf = this.getFlushedExports()
+    //this.exports.__proto__.valueOf = this.getFlushedExports()
   }
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
@@ -82,8 +80,7 @@ class CommandFunctions {
     if (cliArgs.hasOwnProperty('format')) {
       sanitize({ ...options, _: primaryArgs }, format)
     }
-
-    let output = this.getExport(commandName)
+    let output = this.getExport(commandName, { mode: 'cli' })
     //console.log('m', primaryArgs, options)
     if (typeof output == 'function') {
       output = output(...primaryArgs, new Options(options))
@@ -173,12 +170,20 @@ class CommandFunctions {
       match: commandMatch || exportMatch || null
     }
   }
-  getExport(name) {
+  getExport(name, options = {}) {
+    const { mode } = options
     const { match, type } = this.findProp(name)
+    //console.log('z', name, mode)
     let output
     if (type === 'command') {
       const commandConfig = this.commandsConfig.commands[match]
-      output = createCommandHandler(commandConfig)
+      let handler
+      if (!this.commandHandlers.hasOwnProperty(match)) {
+        handler = this.commandHandlers[match] = new CommandFunction(commandConfig, { mode })
+      } else {
+        handler = this.commandHandlers[match]
+      }
+      output = handler.execute
     } else if (type === 'export') {
       output = this.staticExports[match]
     } else {
