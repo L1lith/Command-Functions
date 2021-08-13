@@ -1,14 +1,16 @@
-import stripString from './stripString'
+import stripString from '../stripString'
 import { sanitize, valid } from 'sandhands'
-import Options from './Options'
-import argPrompt from './argPrompt'
-import autoNormalize from './autoNormalize'
+import Options from '../Options'
+import argPrompt from '../argPrompt'
+import autoNormalize from '../autoNormalize'
 import ParsedCommandOptions from './ParsedCommandOptions'
+import readCLI from '../readCLI'
 
 const allowedParserOptions = ['defaultName']
 
 class CommandFunction {
-  constructor(config, options = {}, parserOptions = {}) {
+  constructor(config, options = {}) {
+    console.log('a')
     const commandConfig = (this.commandConfig =
       config instanceof ParsedCommandOptions ? config : new ParsedCommandOptions(config))
     this.options = options
@@ -148,6 +150,39 @@ class CommandFunction {
       outputArgs.push(new Options(argsOutput))
     }
     return commandConfig.handler.apply(null, outputArgs)
+  }
+  async runCLI(rawCLI) {
+    const cliArgs = await readCLI(rawCLI, this.commandsOptions /*, minimistOptions*/)
+    const { commandName, options, primaryArgs = [], format, libraryOptions } = cliArgs
+    const { noColors = false } = libraryOptions
+    const { normalize } = this.commandConfig
+    if (cliArgs.hasOwnProperty('format')) {
+      sanitize({ ...options, _: primaryArgs }, format)
+    }
+    let output = this.execute.apply(null, [...primaryArgs, new Options(options)])
+    output = await output
+    if (output !== undefined) console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
+    return output
+  }
+  async autoRun(doExit = true) {
+    const isParentShell = require.main === module.parent
+    if (isParentShell) {
+      this.runCLI()
+        .then(() => {
+          if (doExit === true) {
+            process.exit(0)
+          }
+        })
+        .catch(error => {
+          console.error(error)
+          if (doExit === true) {
+            process.exit(1)
+          }
+        })
+      return null
+    } else {
+      return this.execute
+    }
   }
 }
 

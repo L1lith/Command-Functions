@@ -1,10 +1,12 @@
 import { sanitize, Format, ANY } from 'sandhands'
-import stripString from './stripString'
+import stripString from '../stripString'
 
 const trimmedString = { _: String, trimmed: true }
 const normalInt = { _: Number, min: 0, finite: true, integer: true }
 
-const nameFormat = Format(String).regex(/^[a-z0-9]+$/i)
+const nameFormat = Format(String)
+  .regex(/^[a-z0-9]+$/i)
+  .nullable()
 
 const aliasFormat = {
   _: [String],

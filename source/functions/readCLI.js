@@ -3,7 +3,7 @@ import parseArgsObject from './parseArgsObject'
 
 const nodeRegex = /node($|\.exe$)/ // For testing whether being called via a global command or via node
 
-function readCLI(config, options, minimistOptions = null) {
+function readCLI(config, options = {}, minimistOptions = null) {
   const { commandMap = {} } = config
   const { defaultCommand } = options
   let rawArgs
