@@ -1,4 +1,4 @@
-import parseCommand from './parseCommand'
+import ParsedCommandOptions from './ParsedCommandOptions'
 import readCLI from './readCLI'
 import stripProperties from './stripProperties'
 import { sanitize } from 'sandhands'
@@ -43,7 +43,7 @@ class CommandFunctions {
         }
       }
     Object.entries(commandFunctions).forEach(([commandName, commandConfig]) => {
-      const commandOptions = parseCommand(commandConfig, { defaultName: commandName })
+      const commandOptions = new ParsedCommandOptions(commandConfig, { defaultName: commandName })
       const { name } = commandOptions
       const strippedName = stripString(name)
       commandMap[name] = commandOptions

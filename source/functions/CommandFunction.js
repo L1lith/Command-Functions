@@ -3,11 +3,14 @@ import { sanitize, valid } from 'sandhands'
 import Options from './Options'
 import argPrompt from './argPrompt'
 import autoNormalize from './autoNormalize'
+import ParsedCommandOptions from './ParsedCommandOptions'
+
+const allowedParserOptions = ['defaultName']
 
 class CommandFunction {
-  constructor(commandConfig, options = {}) {
-    //console.log('n', commandConfig)
-    this.commandConfig = commandConfig
+  constructor(config, options = {}, parserOptions = {}) {
+    const commandConfig = (this.commandConfig =
+      config instanceof ParsedCommandOptions ? config : new ParsedCommandOptions(config))
     this.options = options
     if (this.options.mode === undefined) this.options.mode = 'node'
     const { mode } = this.options
