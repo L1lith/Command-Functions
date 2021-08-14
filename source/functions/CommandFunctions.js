@@ -74,7 +74,7 @@ class CommandFunctions {
     //this.exports.__proto__.valueOf = this.getFlushedExports()
   }
   async runCLI(...minimistOptions) {
-    const cliArgs = await readCLI(this.commandsConfig, this.commandsOptions, minimistOptions)
+    const cliArgs = await readCLI(null, this.commandsOptions)
     const { commandName, options, primaryArgs = [], format, libraryOptions } = cliArgs
     const { noColors = false } = libraryOptions
     if (cliArgs.hasOwnProperty('format')) {

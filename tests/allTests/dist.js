@@ -7,7 +7,8 @@ const { inspect } = require('util')
 const exportsFormat = {
   CommandFunctions: Function,
   argPrompt: Function,
-  default: Function
+  default: Function,
+  CommandFunction: Function
 }
 
 describe('the command-functions library has the correct exports', () => {

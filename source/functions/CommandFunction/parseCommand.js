@@ -78,7 +78,7 @@ function parseCommandOptions(input, parserOptions = {}) {
     )
   }
   if (typeof handler != 'function') throw new Error('The command handler should be a function')
-  const name = options.hasOwnProperty('name') ? options.name : defaultName
+  const name = options.hasOwnProperty('name') ? options.name : defaultName || handler.name || null
   //options = { ...defaultOptions, ...options }
   delete options.name
   sanitize(name, nameFormat)

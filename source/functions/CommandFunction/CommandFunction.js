@@ -5,12 +5,12 @@ import argPrompt from '../argPrompt'
 import autoNormalize from '../autoNormalize'
 import ParsedCommandOptions from './ParsedCommandOptions'
 import readCLI from '../readCLI'
+import util from 'util'
 
 const allowedParserOptions = ['defaultName']
 
 class CommandFunction {
   constructor(config, options = {}) {
-    console.log('a')
     const commandConfig = (this.commandConfig =
       config instanceof ParsedCommandOptions ? config : new ParsedCommandOptions(config))
     this.options = options
@@ -152,8 +152,8 @@ class CommandFunction {
     return commandConfig.handler.apply(null, outputArgs)
   }
   async runCLI(rawCLI) {
-    const cliArgs = await readCLI(rawCLI, this.commandsOptions /*, minimistOptions*/)
-    const { commandName, options, primaryArgs = [], format, libraryOptions } = cliArgs
+    const cliArgs = await readCLI(rawCLI, { getCommandName: false })
+    const { options, primaryArgs = [], format, libraryOptions } = cliArgs
     const { noColors = false } = libraryOptions
     const { normalize } = this.commandConfig
     if (cliArgs.hasOwnProperty('format')) {
@@ -164,7 +164,7 @@ class CommandFunction {
     if (output !== undefined) console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
     return output
   }
-  async autoRun(doExit = true) {
+  autoRun(doExit = true) {
     const isParentShell = require.main === module.parent
     if (isParentShell) {
       this.runCLI()
