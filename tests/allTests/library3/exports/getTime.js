@@ -4,7 +4,7 @@ const { expect } = chai
 
 chai.use(chaiExec)
 
-describe('the fruit command', () => {
+describe('the getTime export', () => {
   it('should return the time', () => {
     // Run your CLI
     const myCLI = chaiExec('node tests/library3/getTime')

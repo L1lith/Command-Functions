@@ -7,9 +7,7 @@ chai.use(chaiExec)
 chai.use(require('chai-match'))
 const dateStringRegex = /[0-9]+\-[0-9]+\-[0-9]+T[0-9]+\:[0-9]+\:[0-9]+\.[0-9a-zA-Z]+/
 
-const defaultFruit = ['tomato', 'banana', 'grape']
-
-describe('the getTime command', () => {
+describe('the getTime command in CLI', () => {
   it('should return the current time', () => {
     // Run your CLI
     const myCLI = chaiExec('node tests/library3/getTime')
