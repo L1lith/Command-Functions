@@ -1,33 +1,38 @@
-import { resolveFormat, valid } from 'sandhands'
+import { resolveFormat, reconstructFormat, sanitize, valid } from 'sandhands'
 import { default as promptSync } from 'prompt-sync'
 import autoComplete from './autoComplete'
+import autoNormalize from './autoNormalize'
 
 const prompt = promptSync()
 
 function argPrompt(question, argConfig) {
-  const options = {}
+  const options = { autoComplete: argConfig.autoComplete }
   let formatDetails = null
   if (argConfig.hasOwnProperty('format')) {
     formatDetails = resolveFormat(argConfig.format)
-    const autoComplete = getAutoComplete(formatDetails)
-    if (autoComplete) {
-      options.autocomplete = autoComplete
-    }
-    if (formatDetails.format === Boolean) {
-      question += ' (yes/no)'
+    if (!argConfig.hasOwnProperty('autoComplete')) {
+      options.autoComplete = getAutoComplete(formatDetails)
     }
   }
-  console.log(question)
-  let response = prompt('> ', options)
-  //   if (formatDetails !== null) {
-  //     response = autoNormalize(response, formatDetails)
-  //   }
+  if (typeof argConfig.askQuestion != 'function') argConfig.askQuestion = askQuestion
+  let response
+  if (typeof argConfig.askQuestion != 'function') {
+    console.log(question)
+    response = prompt('> ', options)
+  } else {
+    response = await argConfig.askQuestion(question, argConfig, formatDetails)
+  }
+  if (formatDetails !== null) {
+    response = autoNormalize(response, formatDetails)
+    sanitize(response, reconstructFormat(formatDetails))
+  }
   return response
 }
 
 function getAutoComplete(formatDetails, extraOptions = []) {
   const { format } = formatDetails
   if (format === Boolean) return autoComplete(['yes', 'no'].concat(extraOptions))
+  return null
 }
 
 export default argPrompt

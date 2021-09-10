@@ -152,6 +152,7 @@ class CommandFunction {
     return commandConfig.handler.apply(null, outputArgs)
   }
   async runCLI(rawCLI) {
+    if (rawCLI === null) rawCLI = []
     const cliArgs = await readCLI(rawCLI, { getCommandName: false })
     const { options, primaryArgs = [], format, libraryOptions } = cliArgs
     const { noColors = false } = libraryOptions
@@ -164,10 +165,11 @@ class CommandFunction {
     if (output !== undefined) console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
     return output
   }
-  autoRun(doExit = true) {
+  autoRun(options = {}) {
+    const { doExit = true, cliArgs = null } = options
     const isParentShell = require.main === module.parent
     if (isParentShell) {
-      this.runCLI()
+      this.runCLI(cliArgs)
         .then(() => {
           if (doExit === true) {
             process.exit(0)

@@ -3,7 +3,7 @@ import { sanitize } from 'sandhands'
 import parseArgsObject from './parseArgsObject'
 
 const nodeRegex = /node($|\.exe$)/ // For testing whether being called via a global command or via node
-const rawArgsFormat = [String]
+const rawArgsFormat = { _: [String], minLength: 0 } // Allow arrays of 0 or more non-empty strings
 
 function readCLI(rawArgs, options = {}) {
   const { defaultCommand, getCommandName = true } = options
