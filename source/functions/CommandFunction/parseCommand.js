@@ -83,6 +83,9 @@ function parseCommandOptions(input, parserOptions = {}) {
   delete options.name
   sanitize(name, nameFormat)
   sanitize(options, commandOptionsFormat)
+  if (options.hasOwnProperty('args')) {
+    Object.entries(options.args).forEach(([arg, config]) => {})
+  }
   if (options.hasOwnProperty('aliases'))
     options.aliases = options.aliases
       .map(alias => stripString(alias))

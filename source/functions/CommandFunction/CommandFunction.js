@@ -92,6 +92,17 @@ class CommandFunction {
         }
       })
     }
+    Object.entries(commandConfig.options.args).forEach(([arg, config]) => {
+      if (!argsOutput.hasOwnProperty(arg)) {
+        setArg(
+          argsOutput,
+          primaryArgs,
+          arg,
+          config,
+          config.hasOwnProperty('default') ? config.default : null
+        )
+      }
+    })
 
     Object.keys(defaultGetters).forEach(key => {
       if (!(key in argsOutput)) {
