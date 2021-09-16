@@ -1,6 +1,7 @@
 const chai = require('chai')
 const chaiExec = require('@jsdevtools/chai-exec')
 const { expect } = chai
+const { join } = require('path')
 
 chai.use(chaiExec)
 
@@ -41,7 +42,10 @@ describe('multiply in CLI', () => {
   it('should function properly when installed as a command-line executable', () => {
     // Note: must run "npm link ." before this test will pass
 
-    const myCLI = chaiExec('command-templates-test-library multiply 25 10')
+    const myCLI = chaiExec('command-templates-test-library multiply 25 10', {
+      //cwd: join(__dirname, '../../../../'),
+      //stdio: 'inherit'
+    })
     expect(myCLI).to.exit.with.code(0)
     expect(myCLI).stdout.to.contain('250')
   })

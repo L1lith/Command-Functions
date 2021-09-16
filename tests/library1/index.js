@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-
+//const { join } = require('path')
 const { CommandFunctions } = require('../../dist/command-functions')
-const commands = require('./commands')
+const commands = require('./commands') //join(__dirname, 'commands', 'index.js')
 const { version } = require('../../package.json')
 
 const app = new CommandFunctions(commands, {
