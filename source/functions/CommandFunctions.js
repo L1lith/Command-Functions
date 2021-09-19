@@ -21,6 +21,10 @@ proxyHandlers.set =
       throw new Error('Cannot overwrite the library object')
     }
 
+const defaultExports = {
+  Options
+}
+
 class CommandFunctions {
   constructor(commandFunctions = {}, options = {}) {
     autoBind(this)
@@ -58,11 +62,13 @@ class CommandFunctions {
     commandsConfig.defaultCommand = options.defaultCommand || null
     this.staticExports = {}
     if (typeof options.exports == 'object' && options.exports !== null) {
-      Object.entries(options.exports).forEach(([key, value]) => {
-        const strippedName = stripString(key)
-        if (strippedName !== key) aliasMap[strippedName] = key
-        this.staticExports[key] = value
-      })
+      Object.entries(options.exports)
+        .concat(Object.entries(defaultExports))
+        .forEach(([key, value]) => {
+          const strippedName = stripString(key)
+          if (strippedName !== key) aliasMap[strippedName] = key
+          this.staticExports[key] = value
+        })
     }
     this.propertyList = Object.keys(this.commandsConfig.commands)
       .concat(Object.keys(this.staticExports))
@@ -152,6 +158,9 @@ class CommandFunctions {
     if (typeof name != 'string') throw new Error('Invalid Command Name')
 
     let searchName = stripString(name)
+    // if (searchName === 'testprop') {
+    //   console.log(searchName, this.aliasMap, this.staticExports)
+    // }
     if (this.aliasMap.hasOwnProperty(searchName)) {
       searchName = this.aliasMap[searchName]
     }
@@ -162,6 +171,7 @@ class CommandFunctions {
     const exportMatch = Object.keys(this.staticExports).find(
       exportName => exportName === searchName
     )
+    //console.log(name, exportMatch)
     if (commandMatch && exportMatch) {
       throw new Error('Found duplicate exports for ' + name)
     }
@@ -173,7 +183,7 @@ class CommandFunctions {
   getExport(name, options = {}) {
     const { mode } = options
     const { match, type } = this.findProp(name)
-    //console.log('z', name, mode)
+    //console.log('z', name, mode, type)
     let output
     if (type === 'command') {
       const commandConfig = this.commandsConfig.commands[match]

@@ -10,7 +10,8 @@ const exportsFormat = {
   squareRoot: Function,
   saySomething: Function,
   multiply: Function,
-  help: Function
+  help: Function,
+  Options: Function
 }
 
 describe('the library has the correct exports', () => {

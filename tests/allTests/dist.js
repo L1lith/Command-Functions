@@ -8,7 +8,8 @@ const exportsFormat = {
   CommandFunctions: Function,
   argPrompt: Function,
   default: Function,
-  CommandFunction: Function
+  CommandFunction: Function,
+  Options: Function
 }
 
 describe('the command-functions library has the correct exports', () => {
