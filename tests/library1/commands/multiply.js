@@ -1,5 +1,4 @@
 function multiply(...numbers) {
-  console.log(numbers)
   if (numbers.length < 2) throw new Error('Must supply at least 2 numbers')
   let output = 1
   numbers.forEach(n => {

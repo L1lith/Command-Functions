@@ -12,5 +12,6 @@ module.exports = {
       default: 'hello world',
       argsPosition: 0
     }
-  }
+  },
+  noOptions: true
 }

@@ -11,7 +11,7 @@ describe('the saySomething function is exported correctly', () => {
     //console.log(library)
     expect(library.Options).to.be.an('Function')
     const { Options } = library
-    expect(library.saySomething(new Options({ message: 'tomato' }))).to.equal('tomato')
+    expect(library.saySomething(new Options({ message: 'tomato' }))).to.equal('TOMATO')
   })
   // it('throws with invalid args', () => {
   //   expect(() => {

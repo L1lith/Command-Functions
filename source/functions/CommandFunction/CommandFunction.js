@@ -72,18 +72,19 @@ class CommandFunction {
     const argsOutput = {}
     const primaryArgs = []
 
-    let options = {}
+    //let options = {}
     if (args.length > 0) {
       args.forEach((value, index) => {
         if (index >= args.length - 1 && value instanceof Options) {
-          options = { ...value }
+          Object.entries(value).forEach(([key, subValue]) => {
+            setArg(argsOutput, primaryArgs, key, commandConfig, subValue)
+          })
           return
         } else if (!allowBonusArgs && index >= primaryOptions.length)
           throw new Error(`Received too many primary arguments.`)
         const argName = primaryOptions[index]
         if (typeof argName == 'string') {
-          const argConfig = commandConfig.options.args[argName] || {}
-          setArg(argsOutput, primaryArgs, argName, argConfig, value)
+          setArg(argsOutput, primaryArgs, argName, commandConfig, value)
         } else {
           primaryArgs[index] = value
         }
@@ -95,7 +96,7 @@ class CommandFunction {
           argsOutput,
           primaryArgs,
           arg,
-          config,
+          commandConfig,
           config.hasOwnProperty('default') ? config.default : null
         )
       }
@@ -105,48 +106,31 @@ class CommandFunction {
       if (!(key in argsOutput)) {
         const output = defaultGetters[key]()
         //(key, output)
-        const argConfig = commandConfig.options.args[key] || {}
-        setArg(argsOutput, primaryArgs, key, argConfig, output, { throw: false })
+        setArg(argsOutput, primaryArgs, key, commandConfig, output, { throw: false })
       }
     })
     Object.keys(defaults).forEach(key => {
       if (!(key in argsOutput)) {
         const output = defaults[key]
-        const argConfig = commandConfig.options.args[key] || {}
-        setArg(argsOutput, primaryArgs, key, argConfig, output, { throw: false })
+        setArg(argsOutput, primaryArgs, key, commandConfig, output, { throw: false })
       }
     })
     //if (!Array.isArray(args)) throw new Error('args must be an array')
     //if (typeof options !== 'object') throw new Error('Options must be an object')
 
-    if (typeof options == 'object' && options !== null)
-      Object.entries(options).forEach(([arg, value]) => {
-        if (arg === '_') return // skip for now
-        const argSearchString = stripString(arg)
-        const argMatch = allowedOptions.find(option => stripString(option) === argSearchString)
-        if (!argMatch) throw new Error(`The argument "${arg}" is not accepted by the command`)
-        argsOutput[argMatch] = value
-      })
+    // if (typeof options == 'object' && options !== null)
+    //   Object.entries(options).forEach(([arg, value]) => {
+    //     if (arg === '_') return // skip for now
+    //     const argSearchString = stripString(arg)
+    //     const argMatch = allowedOptions.find(option => stripString(option) === argSearchString)
+    //     if (!argMatch) throw new Error(`The argument "${arg}" is not accepted by the command`)
+    //     setArg(argsOutput, primaryArgs, argMatch, commandConfig, value)
+    //   })
 
     requiredOptions.forEach(requiredOption => {
       if (!argsOutput.hasOwnProperty(requiredOption))
         throw new Error(`Missing the "${requiredOption}" argument`)
     })
-    // Object.entries(argsOutput).forEach(([arg, value]) => {
-    //   const argOptions = commandConfig.options.args[arg] || {}
-    //   const { argsPosition } = argOptions
-    //   if (argOptions.hasOwnProperty('normalize')) {
-    //     value = argOptions.normalize(value)
-    //   }
-    //   if (argOptions.hasOwnProperty('format')) {
-    //     console.log('m', arg, value, this)
-    //     sanitize(value, argOptions.format)
-    //   }
-    //   // TODO: Figure this out
-    //   if (isFinite(argsPosition) && argsPosition >= 0) {
-    //     primaryArgs[argsPosition] = value
-    //   }
-    // })
     argsOutput.mode = mode
     let outputArgs = []
     if (spreadArgs === true) {
@@ -196,8 +180,9 @@ class CommandFunction {
   }
 }
 
-function setArg(outputArgs, primaryArgs, argName, argConfig, value, options = {}) {
+function setArg(outputArgs, primaryArgs, argName, commandConfig, value, options = {}) {
   const shouldThrow = options.throw === true
+  const argConfig = commandConfig?.options?.args?.[argName]
   const { normalize, format, argsPosition } = argConfig
   if (argConfig.hasOwnProperty('format')) value = autoNormalize(value, format)
   if (argConfig.hasOwnProperty('normalize')) {
