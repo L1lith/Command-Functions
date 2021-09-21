@@ -74,14 +74,11 @@ class CommandFunction {
 
     let options = {}
     if (args.length > 0) {
-      const lastArg = args[args.length - 1]
-      if (lastArg instanceof Options) {
-        // Providing Options
-        options = lastArg
-        args.pop()
-      }
       args.forEach((value, index) => {
-        if (!allowBonusArgs && index >= primaryOptions.length)
+        if (index >= args.length - 1 && value instanceof Options) {
+          options = { ...value }
+          return
+        } else if (!allowBonusArgs && index >= primaryOptions.length)
           throw new Error(`Received too many primary arguments.`)
         const argName = primaryOptions[index]
         if (typeof argName == 'string') {

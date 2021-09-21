@@ -1,4 +1,5 @@
 import { sanitize } from 'sandhands'
+import Options from './Options'
 
 const libraryOptionsFormats = Object.entries({ noColors: Boolean })
 
@@ -26,6 +27,13 @@ function parseArgsObject(argsObject, parserOptions = {}) {
       : typeof commandName == 'string' && options[commandName]?.length > 0
       ? options[commandName]
       : []
+
+  const lastArg = primaryArgs[primaryArgs.length - 1]
+  if (lastArg instanceof Options) {
+    // Providing Options
+    options = { ...options, ...lastArg }
+    primaryArgs.pop()
+  }
   delete options[commandName]
   delete options._
   const libraryOptions = {}
