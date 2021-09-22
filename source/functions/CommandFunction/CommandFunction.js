@@ -56,7 +56,7 @@ class CommandFunction {
 
     this.execute = this.execute.bind(this)
   }
-  execute(...args) {
+  async execute(...args) {
     const {
       primaryOptions,
       defaultGetters,
@@ -141,7 +141,16 @@ class CommandFunction {
     if (noOptions !== true) {
       outputArgs.push(new Options(argsOutput))
     }
-    return commandConfig.handler.apply(null, outputArgs)
+    let oldLog
+    if (args.silent === true) {
+      oldLog = console.log
+      console.log = () => {} // Do Nothing
+    }
+    const output = await commandConfig.handler.apply(null, outputArgs)
+    if (args.silent === true) {
+      console.log = oldLog // Fix the logging
+    }
+    return output
   }
   async runCLI(rawCLI) {
     if (rawCLI === null) rawCLI = []
@@ -152,8 +161,7 @@ class CommandFunction {
     if (cliArgs.hasOwnProperty('format')) {
       sanitize({ ...options, _: primaryArgs }, format)
     }
-    let output = this.execute.apply(null, [...primaryArgs, new Options(options)])
-    output = await output
+    const output = await this.execute.apply(null, [...primaryArgs, new Options(options)])
     if (output !== undefined) console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
     return output
   }
@@ -182,7 +190,7 @@ class CommandFunction {
 
 function setArg(outputArgs, primaryArgs, argName, commandConfig, value, options = {}) {
   const shouldThrow = options.throw === true
-  const argConfig = commandConfig?.options?.args?.[argName]
+  const argConfig = commandConfig?.options?.args?.[argName] || {}
   const { normalize, format, argsPosition } = argConfig
   if (argConfig.hasOwnProperty('format')) value = autoNormalize(value, format)
   if (argConfig.hasOwnProperty('normalize')) {

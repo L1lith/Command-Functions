@@ -45,7 +45,8 @@ const commandOptionsFormat = {
     spreadArgs: Boolean,
     allowBonusArgs: Boolean,
     noOptions: Boolean,
-    description: String
+    description: String,
+    silent: Boolean
   },
   validate: config =>
     !config.hasOwnProperty('primaryArgs') ||
