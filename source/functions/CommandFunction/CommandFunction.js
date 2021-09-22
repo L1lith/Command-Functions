@@ -162,13 +162,14 @@ class CommandFunction {
     if (rawCLI === null) rawCLI = []
     const cliArgs = await readCLI(rawCLI, { getCommandName: false })
     const { options, primaryArgs = [], format, libraryOptions } = cliArgs
-    const { noColors = false } = libraryOptions
+    const { noColors = false, silent = false } = libraryOptions
     const { normalize } = this.commandConfig
     if (cliArgs.hasOwnProperty('format')) {
       sanitize({ ...options, _: primaryArgs }, format)
     }
     const output = await this.execute.apply(null, [...primaryArgs, new Options(options)])
-    if (output !== undefined) console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
+    if (silent !== true && output !== undefined)
+      console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
     return output
   }
   autoRun(options = {}) {
