@@ -20,6 +20,6 @@ describe('saySomething in CLI', () => {
   it('can run silently', () => {
     const myCLI = chaiExec('node tests/library1 saySomething banana --silent')
     expect(myCLI).to.exit.with.code(0)
-    console.log('p', expect(myCLI).stdout)
+    expect(myCLI).stdout.to.equal('')
   })
 })

@@ -2,6 +2,7 @@ const chai = require('chai')
 const chaiExec = require('@jsdevtools/chai-exec')
 const { expect } = chai
 const { join } = require('path')
+const stripAnsi = require('../../../functions/stripAnsi')
 
 chai.use(chaiExec)
 
@@ -20,12 +21,16 @@ describe('multiply in CLI', () => {
   it('should support colors by default', () => {
     const myCLI = chaiExec('node tests/library1 product 5 6')
     expect(myCLI).to.exit.with.code(0)
-    expect(myCLI).stdout.to.equal('\x1B[33m30\x1B[39m\n')
+    expect(myCLI.stdout).to.not.equal(stripAnsi(myCLI.stdout))
   })
   it('should support disabling colors', () => {
     const myCLI = chaiExec('node tests/library1 product 5 6 --noColors')
     expect(myCLI).to.exit.with.code(0)
-    expect(myCLI).stdout.to.equal('30\n')
+    expect(myCLI.stdout).to.equal(
+      stripAnsi(
+        myCLI.stdout
+      ) /* Doing this strips the colors so if there are colors the content will be mismatched */
+    )
   })
   it('should throw with no arguments', () => {
     // Run your CLI

@@ -67,7 +67,12 @@ class CommandFunction {
     } = this
 
     const { mode } = this.options
-    const { allowBonusArgs = false, spreadArgs = true, noOptions = false } = commandConfig.options
+    const {
+      allowBonusArgs = false,
+      spreadArgs = true,
+      noOptions = false,
+      silent = false
+    } = commandConfig.options
 
     const argsOutput = {}
     const primaryArgs = []
@@ -142,12 +147,13 @@ class CommandFunction {
       outputArgs.push(new Options(argsOutput))
     }
     let oldLog
-    if (args.silent === true) {
+    console.log()
+    if (silent === true) {
       oldLog = console.log
       console.log = () => {} // Do Nothing
     }
     const output = await commandConfig.handler.apply(null, outputArgs)
-    if (args.silent === true) {
+    if (silent === true) {
       console.log = oldLog // Fix the logging
     }
     return output

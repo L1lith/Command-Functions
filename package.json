@@ -28,6 +28,7 @@
     "cross-env": "^7.0.3",
     "microbundle": "^0.13.3",
     "mocha": "^9.0.3",
+    "strip-ansi": "^7.0.1",
     "strip-color": "^0.1.0"
   },
   "scripts": {
