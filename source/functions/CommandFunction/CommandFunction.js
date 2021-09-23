@@ -164,7 +164,6 @@ class CommandFunction {
     return output
   }
   async runCLI(rawCLI) {
-    console.log('hi')
     //if (rawCLI === null)
     const cliArgs = await readCLI(rawCLI, { getCommandName: false })
     const { options, primaryArgs = [], format, libraryOptions } = cliArgs
