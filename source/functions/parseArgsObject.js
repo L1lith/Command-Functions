@@ -1,7 +1,7 @@
 import { sanitize } from 'sandhands'
 import Options from './Options'
 
-const libraryOptionsFormats = Object.entries({ noColors: Boolean })
+const libraryOptionsFormats = Object.entries({ noColors: Boolean, silent: Boolean })
 
 function parseArgsObject(argsObject, parserOptions = {}) {
   //if (!Array.isArray(args)) throw new Error('Please supply an argument array')

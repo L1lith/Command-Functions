@@ -10,6 +10,7 @@ function readCLI(rawArgs, options = {}) {
   if (!rawArgs) {
     rawArgs = [...process.argv]
   }
+
   sanitize(rawArgs, rawArgsFormat)
   if (nodeRegex.test(rawArgs[0])) {
     // Cut off an extra argument if the first command is node to compensate for the file path
