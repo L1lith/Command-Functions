@@ -147,24 +147,24 @@ class CommandFunction {
       outputArgs.push(new Options(argsOutput))
     }
     let oldLog
-    console.log()
-    if (silent === true) {
-      oldLog = console.log
-      console.log = () => {} // Do Nothing
-    }
+    // if (silent === true) {
+    //   oldLog = console.log
+    //   console.log = () => {} // Do Nothing
+    // }
     const output = commandConfig.handler.apply(null, outputArgs)
-    if (silent === true) {
-      if (output instanceof Promise) {
-        output.finally(() => {
-          console.log = oldLog // Fix the logging
-        })
-      } else {
-        console.log = oldLog // Fix the logging
-      }
-    }
+    // if (silent === true) {
+    //   if (output instanceof Promise) {
+    //     output.finally(() => {
+    //       console.log = oldLog // Fix the logging
+    //     })
+    //   } else {
+    //     console.log = oldLog // Fix the logging
+    //   }
+    // }
     return output
   }
   async runCLI(rawCLI) {
+    console.log('hi')
     //if (rawCLI === null)
     const cliArgs = await readCLI(rawCLI, { getCommandName: false })
     const { options, primaryArgs = [], format, libraryOptions } = cliArgs

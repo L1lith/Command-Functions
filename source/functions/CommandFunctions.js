@@ -82,17 +82,24 @@ class CommandFunctions {
   async runCLI(...minimistOptions) {
     const cliArgs = await readCLI(null, this.commandsOptions)
     const { commandName, options, primaryArgs = [], format, libraryOptions } = cliArgs
-    const { noColors = false } = libraryOptions
+    const { noColors = false, silent = false } = libraryOptions
     if (cliArgs.hasOwnProperty('format')) {
       sanitize({ ...options, _: primaryArgs }, format)
     }
+    if (silent === true) {
+      oldLog = console.log
+      console.log = () => {} // Do Nothing
+    }
     let output = this.getExport(commandName, { mode: 'cli' })
-    //console.log('m', primaryArgs, options)
     if (typeof output == 'function') {
       output = output(...primaryArgs, new Options(options))
     }
+    if (silent === true) {
+      console.log = oldLog // Fix the logging
+    }
     output = await output
-    if (output !== undefined) console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
+    if (silent !== true && output !== undefined)
+      console.log(util.inspect(output, { colors: !noColors })) // TODO: Make Colors Toggleable
     return output
   }
   autoRun(doExit = true) {
