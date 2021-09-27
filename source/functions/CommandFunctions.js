@@ -79,8 +79,13 @@ class CommandFunctions {
     this.exports = {}
     //this.exports.__proto__.valueOf = this.getFlushedExports()
   }
-  async runCLI(...minimistOptions) {
-    const cliArgs = await readCLI(null, this.commandsOptions)
+  async runCLI(args = null) {
+    // const matchingProp = Array.isArray(args) && args.length > 0 ? this.findProp(args[0]) : null
+    // const tempCommandName = matchingProp
+    //   ? matchingProp.match
+    //   : this.commandsOptions.defaultCommand || null
+    // if (!tempCommandName) throw new Error('Could not find the matching command.')
+    const cliArgs = await readCLI(args, this.commandsOptions)
     const { commandName, options, primaryArgs = [], format, libraryOptions } = cliArgs
     const { noColors = false, silent = false } = libraryOptions
     if (cliArgs.hasOwnProperty('format')) {
