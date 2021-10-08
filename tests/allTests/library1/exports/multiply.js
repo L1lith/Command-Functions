@@ -4,7 +4,6 @@ const library = require('../../../library1')
 
 describe('the multiply function is exported correctly', () => {
   it('the multiply function returns the correct value', () => {
-    console.log(expect(library.multiply(4, -3)))
     expect(library.multiply(4, -3)).to.equal(-12)
     expect(library.multiply(9, 2)).to.equal(18)
     expect(library.multiply(4, 5)).to.equal(20)

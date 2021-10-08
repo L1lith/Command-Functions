@@ -1,5 +1,5 @@
 import stripString from '../stripString'
-import { sanitize, valid } from 'sandhands'
+import { sanitize, valid, resolveFormat } from 'sandhands'
 import Options from '../Options'
 import argPrompt from '../argPrompt'
 import autoNormalize from '../autoNormalize'
@@ -204,7 +204,7 @@ function setArg(outputArgs, primaryArgs, argName, commandConfig, value, options 
   const shouldThrow = options.throw === true
   const argConfig = commandConfig?.options?.args?.[argName] || {}
   const { normalize, format, argsPosition } = argConfig
-  if (argConfig.hasOwnProperty('format')) value = autoNormalize(value, format)
+  if (argConfig.hasOwnProperty('format')) value = autoNormalize(value, resolveFormat(format))
   if (argConfig.hasOwnProperty('normalize')) {
     value = normalize(value)
   }
