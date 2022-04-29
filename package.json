@@ -39,7 +39,7 @@
     "dev": "rm -rf dist && mkdir dist && babel source -d dist --watch",
     "test": "mocha \"tests/allTests/**/*.js\"",
     "pretty": "prettier --write \"./**/*.js\"",
-    "prepub": "npm run build && npm run test && cp package.json dist && cp LICENSE.md dist && cp README.md dist && json -f dist/package.json -I -e 'delete this.bin; delete this.scripts; delete this.devDependencies;np'",
+    "prepub": "npm run build && npm run test && cp package.json dist && cp LICENSE.md dist && cp README.md dist && json -f dist/package.json -I -e 'delete this.bin; delete this.scripts; delete this.devDependencies;'",
     "pub": "cd dist && npm publish"
   },
   "repository": {
