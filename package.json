@@ -1,6 +1,6 @@
 {
   "name": "command-functions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create libraries that function as both CLI and js libraries at the same time",
   "main": "./index.js",
   "bin": {
@@ -38,6 +38,7 @@
     "dev": "rm -rf dist && mkdir dist && babel source -d dist --watch",
     "test": "mocha \"tests/allTests/**/*.js\"",
     "pretty": "prettier --write \"./**/*.js\"",
+    "prepublish": "throw please use the pub command instead",
     "prepub": "npm run build && npm run test && cp package.json dist && cp LICENSE.md dist && cp README.md dist",
     "pub": "cd dist && npm publish",
     "postpub": "cd dist && del package.json"
