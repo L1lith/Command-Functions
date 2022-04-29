@@ -38,10 +38,8 @@
     "dev": "rm -rf dist && mkdir dist && babel source -d dist --watch",
     "test": "mocha \"tests/allTests/**/*.js\"",
     "pretty": "prettier --write \"./**/*.js\"",
-    "prepublish": "throw please use the pub command instead",
     "prepub": "npm run build && npm run test && cp package.json dist && cp LICENSE.md dist && cp README.md dist",
-    "pub": "cd dist && npm publish",
-    "postpub": "cd dist && del package.json"
+    "pub": "cd dist && npm publish"
   },
   "repository": {
     "type": "git",
