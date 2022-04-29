@@ -2,7 +2,7 @@
   "name": "command-functions",
   "version": "0.1.0",
   "description": "Create libraries that function as both CLI and js libraries at the same time",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "bin": {
     "command-templates-test-library": "./tests/library1/index.js"
   },
@@ -43,7 +43,10 @@
     "test": "mocha \"tests/allTests/**/*.js\"",
     "prepublishOnly": "npm run build-production&&npm run test",
     "publish-alias": "npm publish",
-    "pretty": "prettier --write \"./**/*.js\""
+    "pretty": "prettier --write \"./**/*.js\"",
+    "prepub": "npm run build & npm run test & copy package.json dist & copy LICENSE.md dist & copy README.md dist",
+    "pub": "cd dist & npm publish",
+    "postpub": "cd dist & del package.json"
   },
   "repository": {
     "type": "git",

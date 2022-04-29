@@ -32,7 +32,7 @@ class CommandFunctions {
     const commandMap = {}
     const aliasMap = (this.aliasMap = {})
     if (typeof commandFunctions !== 'object' || commandFunctions === null)
-      throw new Error('Must supply a commandFunctions object')
+      throw new Error('Must supply an object to be the map of command functions')
     commandFunctions = { ...commandFunctions }
     if (!commandFunctions.hasOwnProperty('help'))
       commandFunctions.help = {
@@ -59,7 +59,8 @@ class CommandFunctions {
     })
     this.options = options
     commandsConfig.commands = commandMap
-    commandsConfig.defaultCommand = options.defaultCommand || null
+    commandsConfig.defaultCommand =
+      options.defaultCommand || commandMap.hasOwnProperty('help') ? 'help' : null
     this.staticExports = {}
     if (typeof options.exports == 'object' && options.exports !== null) {
       Object.entries(options.exports)
@@ -107,6 +108,7 @@ class CommandFunctions {
     return output
   }
   autoRun(doExit = true) {
+    console.warn('The autoRun method is deprecated, it may not work correctly.')
     const isParentShell = require.main === module.parent
     if (isParentShell) {
       this.runCLI()
@@ -165,7 +167,8 @@ class CommandFunctions {
     return this.propertyList
   }
   findProp(name = null) {
-    if (name === null && this.defaultCommand) name = this.defaultCommand
+    if (name === null && this.commandsConfig.defaultCommand)
+      name = this.commandsConfig.defaultCommand
     if (typeof name != 'string') throw new Error('Invalid Command Name')
 
     let searchName = stripString(name)
