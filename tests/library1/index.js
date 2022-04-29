@@ -18,7 +18,6 @@ async function run() {
 if (require.main === module) {
   run()
     .then(() => {
-      console.log('Finished')
       process.exit(0)
     })
     .catch(error => {

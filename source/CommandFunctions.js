@@ -89,6 +89,7 @@ class CommandFunctions {
     const cliArgs = await readCLI(args, this.commandsOptions)
     const { commandName, options, primaryArgs = [], format, libraryOptions } = cliArgs
     const { noColors = false, silent = false } = libraryOptions
+    let oldLog
     if (cliArgs.hasOwnProperty('format')) {
       sanitize({ ...options, _: primaryArgs }, format)
     }

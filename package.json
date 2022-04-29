@@ -16,17 +16,13 @@
     "prompt-sync": "^4.2.0",
     "sandhands": "^1.8.9"
   },
-  "files": [
-    "/dist/index.js",
-    "/dist/index.js.map",
-    "LICENSE.md"
-  ],
   "devDependencies": {
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.9",
     "@babel/plugin-transform-modules-commonjs": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@jsdevtools/chai-exec": "^2.1.1",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "chai": "^4.3.4",
     "chai-match": "^1.1.1",
     "concat-stream": "^2.0.0",
