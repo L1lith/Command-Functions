@@ -1,10 +1,10 @@
-import stripString from '../stripString'
+//import stripString from '../stripString'
 import { sanitize, valid, resolveFormat } from 'sandhands'
 import Options from '../Options'
-import argPrompt from '../argPrompt'
-import autoNormalize from '../autoNormalize'
+import argPrompt from '../functions/argPrompt'
+import autoNormalize from '../functions/autoNormalize'
 import ParsedCommandOptions from './ParsedCommandOptions'
-import readCLI from '../readCLI'
+import readCLI from '../functions/readCLI'
 import util from 'util'
 
 const allowedParserOptions = ['defaultName']

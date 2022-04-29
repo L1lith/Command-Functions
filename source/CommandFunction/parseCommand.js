@@ -1,5 +1,5 @@
 import { sanitize, Format, ANY } from 'sandhands'
-import stripString from '../stripString'
+import stripString from '../functions/stripString'
 
 const trimmedString = { _: String, trimmed: true }
 const normalInt = { _: Number, min: 0, finite: true, integer: true }

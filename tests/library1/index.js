@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 //const { join } = require('path')
-const { CommandFunctions } = require('../../dist/command-functions')
+const { CommandFunctions } = require('../../dist/index')
 const commands = require('./commands') //join(__dirname, 'commands', 'index.js')
 const { version } = require('../../package.json')
 

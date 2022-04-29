@@ -1,6 +1,6 @@
 const chai = require('chai')
 const { assert, expect } = chai
-const library = require('../../dist/command-functions')
+const library = require('../../dist/index')
 const { details } = require('sandhands')
 const { inspect } = require('util')
 

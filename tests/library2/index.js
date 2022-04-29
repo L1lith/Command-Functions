@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { CommandFunctions } = require('../../dist/command-functions')
+const { CommandFunctions } = require('../../dist/index')
 const commands = require('./commands')
 
 const app = new CommandFunctions(commands, {

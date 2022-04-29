@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { CommandFunction } = require('../../dist/command-functions')
+const { CommandFunction } = require('../../dist/index')
 
 function getTime() {
   return new Date()

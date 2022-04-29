@@ -1,5 +1,5 @@
 import { sanitize } from 'sandhands'
-import Options from './Options'
+import Options from '../Options'
 
 const libraryOptionsFormats = Object.entries({ noColors: Boolean, silent: Boolean })
 
