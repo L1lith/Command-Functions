@@ -14,6 +14,12 @@ describe('the help command', () => {
     expect(myCLI).stdout.to.contain('saySomething')
     expect(myCLI).stdout.to.contain('squareRoot')
   })
+  it('should be the default command', () => {
+    // Run your CLI
+    const myCLI = chaiExec('node tests/library1')
+    expect(myCLI).to.exit.with.code(0)
+    expect(myCLI).stdout.to.contain('Commands')
+  })
   it('should give accurate info about the saySomething command', () => {
     // Run your CLI
     const myCLI = chaiExec('node tests/library1 help saySomething')
