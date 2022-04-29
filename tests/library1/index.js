@@ -12,7 +12,8 @@ const app = new CommandFunctions(commands, {
 })
 
 if (require.main === module) {
-  run()
+  app
+    .runCLI()
     .then(() => {
       process.exit(0)
     })

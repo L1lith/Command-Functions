@@ -8,12 +8,10 @@ const app = new CommandFunctions(commands, {
 })
 
 //module.exports = app.autoRun()
-async function run() {
-  await app.runCLI()
-}
 
 if (require.main === module) {
-  run()
+  app
+    .runCLI()
     .then(() => {
       process.exit(0)
     })
