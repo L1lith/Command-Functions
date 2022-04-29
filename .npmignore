@@ -12,7 +12,7 @@ node_modules/
 /docs-source/
 /examples/
 /test-performance/
-!/dist/command-functions.js
-!/dist/command-functions.map
+!/dist/index.js
+!/dist/index.map
 !/**/.gitkeep
 /tests/
