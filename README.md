@@ -34,7 +34,7 @@ const app = new CommandFunctions(commands)
 
 // Detects whether being required or being run by the terminal
 if (require.main === module) { // It's being run by the terminal
-  run()
+  app.runCLI()
     .then(() => {
       console.log('Finished')
       process.exit(0)

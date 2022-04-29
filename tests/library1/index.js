@@ -11,10 +11,6 @@ const app = new CommandFunctions(commands, {
   }
 })
 
-async function run() {
-  await app.runCLI()
-}
-
 if (require.main === module) {
   run()
     .then(() => {

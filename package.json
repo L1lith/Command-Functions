@@ -1,13 +1,12 @@
 {
   "name": "command-functions",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Create libraries that function as both CLI and js libraries at the same time",
   "main": "./index.js",
   "bin": {
     "command-templates-test-library": "./tests/library1/index.js"
   },
   "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/runtime": "^7.17.9",
     "auto-bind": "^4.0.0",
     "chalk": "^4.1.2",
@@ -17,6 +16,7 @@
     "sandhands": "^1.8.9"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.9",
     "@babel/plugin-transform-modules-commonjs": "^7.17.9",
