@@ -27,5 +27,5 @@ if (isParentShell) {
       }
     })
 } else {
-  return this.execute
+  module.exports = command.execute
 }

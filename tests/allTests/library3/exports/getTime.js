@@ -1,13 +1,14 @@
 const chai = require('chai')
-const chaiExec = require('@jsdevtools/chai-exec')
 const { expect } = chai
 
-chai.use(chaiExec)
-
-describe('the getTime export', () => {
-  it('should return the time', () => {
-    // Run your CLI
-    const myCLI = chaiExec('node tests/library3/getTime')
-    expect(myCLI).to.exit.with.code(0)
+describe('the getTime function is exported correctly', () => {
+  let getTime = null
+  it('can load the getTime function', () => {
+    getTime = require('../../../library3/getTime')
+    expect(getTime).to.be.a('function')
+  })
+  it('the getTime function returns a date', () => {
+    const time = getTime()
+    expect(time).to.be.a('date')
   })
 })
