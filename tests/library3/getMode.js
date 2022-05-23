@@ -11,7 +11,6 @@ const command = new CommandFunction(getMode)
 //module.exports = command.autoRun()
 async function run() {
   await command.runCLI(process.argv)
-  //console.log('p', )
 }
 
 const isParentShell = require.main === module
@@ -22,9 +21,7 @@ if (isParentShell) {
     })
     .catch(error => {
       console.error(error)
-      if (doExit === true) {
-        process.exit(1)
-      }
+      process.exit(1)
     })
 } else {
   module.exports = command.execute

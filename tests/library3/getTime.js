@@ -22,9 +22,7 @@ if (isParentShell) {
     })
     .catch(error => {
       console.error(error)
-      if (doExit === true) {
-        process.exit(1)
-      }
+      process.exit(1)
     })
 } else {
   module.exports = command.execute

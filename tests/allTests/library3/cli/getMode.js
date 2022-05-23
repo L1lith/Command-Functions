@@ -14,10 +14,4 @@ describe('the getMode command in CLI', () => {
     expect(myCLI).to.exit.with.code(0)
     expect(strip(myCLI.stdout)).to.match(cliStringRegex)
   })
-
-  it('can run silently', () => {
-    const myCLI = chaiExec('node tests/library3/getMode --silent')
-    expect(myCLI).to.exit.with.code(0)
-    expect(myCLI).stdout.to.equal('')
-  })
 })

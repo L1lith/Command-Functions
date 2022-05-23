@@ -14,7 +14,6 @@ class CommandFunction {
     const commandConfig = (this.commandConfig =
       config instanceof ParsedCommandOptions ? config : new ParsedCommandOptions(config))
     this.options = options
-    if (this.options.mode === undefined) this.options.mode = 'node'
     const { mode } = this.options
     const optionsEntries = Object.entries(commandConfig.options.args)
     this.allowedOptions = Object.keys(commandConfig.options.args)
@@ -136,7 +135,7 @@ class CommandFunction {
       if (!argsOutput.hasOwnProperty(requiredOption))
         throw new Error(`Missing the "${requiredOption}" argument`)
     })
-    argsOutput.mode = mode
+    argsOutput.mode = argsOutput.mode || 'node'
     let outputArgs = []
     if (spreadArgs === true) {
       outputArgs = [...primaryArgs]
@@ -171,6 +170,7 @@ class CommandFunction {
     const { options, primaryArgs = [], format, libraryOptions } = cliArgs
     const { noColors = false, silent = false } = libraryOptions
     const { normalize } = this.commandConfig
+    options.mode = typeof options.mode != 'string' || options.mode.length < 1 ? 'cli' : options.mode
     if (cliArgs.hasOwnProperty('format')) {
       sanitize({ ...options, _: primaryArgs }, format)
     }
